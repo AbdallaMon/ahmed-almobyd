@@ -7,7 +7,7 @@ import {
   Zoom,
   useMediaQuery,
   useTheme,
-  Grid2 as Grid,
+  Grid,
   Button,
   CircularProgress,
 } from "@mui/material";

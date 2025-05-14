@@ -13,7 +13,7 @@ import {
   Typography,
   useMediaQuery,
   useTheme,
-  Grid2 as Grid,
+  Grid,
 } from "@mui/material";
 import { matchIsValidTel, MuiTelInput } from "mui-tel-input";
 import { useEffect, useState } from "react";

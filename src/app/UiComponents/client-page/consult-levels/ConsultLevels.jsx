@@ -12,7 +12,7 @@ import {
   Button,
   useMediaQuery,
   useTheme,
-  Grid2 as Grid,
+  Grid,
   Badge,
 } from "@mui/material";
 import { FaChevronDown, FaChevronUp, FaCheckCircle } from "react-icons/fa";

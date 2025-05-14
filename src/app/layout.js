@@ -1,8 +1,11 @@
 import "./globals.css";
+import ToastProvider from "@/app/providers/ToastLoadingProvider";
+import AuthProvider from "@/app/providers/AuthProvider";
+import MUIContextProvider from "@/app/providers/MUIContext";
+import DotsLoader from "@/app/UiComponents/feedback/loaders/DotsLoading";
+import MuiAlertProvider from "@/app/providers/MuiAlert.jsx";
 import colors from "@/app/helpers/colors.js";
 import { Noto_Kufi_Arabic } from "next/font/google";
-import MUIContextProvider from "./providers/MUIContext";
-import DotsLoader from "./UiComponents/feedback/loaders/DotsLoading";
 
 const noto = Noto_Kufi_Arabic({
   weight: ["400", "500", "700"],
@@ -29,10 +32,16 @@ export default function RootLayout({ children }) {
         className={noto.className}
         style={{ backgroundColor: colors.bgSecondary }}
       >
-        <MUIContextProvider>
-          <DotsLoader />
-          {children}
-        </MUIContextProvider>
+        <MuiAlertProvider>
+          <MUIContextProvider>
+            <ToastProvider>
+              <AuthProvider>
+                <DotsLoader />
+                {children}
+              </AuthProvider>
+            </ToastProvider>
+          </MUIContextProvider>
+        </MuiAlertProvider>
       </body>
     </html>
   );
