@@ -14,12 +14,22 @@ const noto = Noto_Kufi_Arabic({
   display: "swap",
 });
 export const metadata = {
-  title: "Dream Studio - Dream Design & Luxurious Home Solutions",
-  description:
-    "Dream Studio specializes in urban design, luxurious home interiors, furniture, and decor, combining elegance, comfort, and well-being to create your dream spaces.",
-  keywords:
-    "Dream Studio,Dream, urban design, تصميم عمراني, luxurious home design, interior design, furniture, home decor, elegant living, custom home solutions",
-  icon: "/favicon.ico",
+  title: "أحمد المبيض | حجز استشارة تصميم داخلي",
+  description: `احجز استشارتك الآن مع المهندس أحمد المبيض، المتخصص في التصميم الداخلي الفاخر. اكتشف كيف يمكنه تحويل مساحتك إلى مكان يجمع بين الأناقة والراحة والوظيفية. استشارات مخصصة للمجالس، المداخل، غرف المعيشة، والفلل.`,
+  keywords: `أحمد المبيض، استشارة تصميم داخلي، حجز استشارة، تصميم فلل، تصميم مجالس، مهندس ديكور، تصميم داخلي، ديكورات فاخرة، استشارات هندسية، أحمد المبيض استشارات، تصميم إماراتي`,
+  openGraph: {
+    title: "احجز استشارتك مع أحمد المبيض",
+    description:
+      "استفد من خبرة المهندس أحمد المبيض في التصميم الداخلي الفاخر. احجز موعدك الآن لتحصل على رؤية تصميمية مخصصة لمساحتك السكنية أو التجارية.",
+    image: "/about/personal.jpeg", // استبدلها بصورة ذات طابع استشاري إن وُجد
+    url: "https://ahmadmobayed.com/register", // عدّل الرابط حسب صفحتك
+    type: "website",
+  },
+  icons: {
+    icon: "/favicon.ico",
+    shortcut: "/favicon.ico",
+    apple: "/favicon.ico",
+  },
 };
 
 export default function RootLayout({ children }) {
