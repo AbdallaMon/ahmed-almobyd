@@ -52,7 +52,7 @@ export const leads = [
     image: "/design.jfif",
     alt: "Dream Studio - Dream Design & Luxurious Home Solutions",
     type: "LINK",
-    href: "https://eng.ahmed.ahmadmobayed.com/",
+    href: "https://eng.ahmadmobayed.com/",
   },
   {
     title: "Books",
