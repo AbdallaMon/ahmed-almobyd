@@ -1,25 +1,25 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { Container, Paper } from "@mui/material";
+import { Box, Container, Paper } from "@mui/material";
 import colors from "@/app/helpers/colors.js";
+import { FinalSelectionForm } from "@/app/UiComponents/client-page/FinalSelectionForm.jsx";
 import {
   DesignLeadsContainer,
   Header,
   LeadCardsContainer,
   LeadCategoryItemsContainer,
-} from "@/app/components/client-page/LeacComponents.jsx";
+} from "@/app/UiComponents/client-page/LeacComponents.jsx";
 import {
   animateFormPage,
-  animateLeadCategoryItem,
   animateLocationItem,
-  initialAnimation,
   reverseAnimation,
-} from "@/app/components/client-page/function.js";
+} from "@/app/UiComponents/client-page/function.js";
 import { useLanguageContext } from "@/app/providers/LanguageProvider.jsx";
-import { useSearchParams } from "next/navigation";
+import { animateRegisterLeadCategoryItem } from "../registerFunctions";
+import { CompleteRegisterForm } from "./CompleteRegisterForm";
 
-export default function ClientPage() {
-  const [leadCategory, setLeadCategory] = useState();
+export default function CompleteRegister({ leadId }) {
+  const [leadCategory, setLeadCategory] = useState("DESIGN");
   const [animateLeadType, setAnimateLeadType] = useState("");
   const [isCatAnimated, setIsCatAnimated] = useState(false);
   const [leadItem, setLeadItem] = useState("");
@@ -31,14 +31,9 @@ export default function ClientPage() {
   const [animateLocation, setAnimateLocation] = useState("");
   const [isLocationAnimated, setIsLocationAnimated] = useState(false);
   const { translate } = useLanguageContext();
-  const searchParams = useSearchParams();
-  const type = searchParams.get("type");
   useEffect(() => {
     if (typeof window !== "undefined") {
-      initialAnimation(
-        setIsAnimating,
-        type === "interior" ? () => animateLeadCategory("DESIGN") : null
-      );
+      animateLeadCategory("DESIGN", true);
     }
   }, []);
 
@@ -68,7 +63,7 @@ export default function ClientPage() {
       !isAnimating &&
       !isReversing
     ) {
-      animateLeadCategoryItem({
+      animateRegisterLeadCategoryItem({
         leadCategory,
         setIsAnimating,
         setIsCatAnimated,
@@ -104,6 +99,33 @@ export default function ClientPage() {
   }, [animateLocation]);
   return (
     <>
+      {!isCatAnimated && (
+        <Box
+          sx={{
+            position: "fixed",
+            zIndex: 4000,
+            width: "100vw",
+            height: "100%",
+            top: 0,
+            left: 0,
+            backgroundImage: "url(/design.jfif)",
+            backgroundPosition: "center",
+            backgroundSize: "cover",
+          }}
+        >
+          <Box
+            sx={{
+              position: "absolute",
+              height: "100%",
+              width: "100%",
+              zIndex: 2,
+              background:
+                "linear-gradient(169deg, rgba(45, 35, 30, 0.3) 0%, rgba(45, 35, 30, 0.85) 100%)",
+            }}
+          ></Box>
+        </Box>
+      )}
+      {/* )} */}
       <Header
         reverseAnimation={() =>
           reverseAnimation({
@@ -152,7 +174,10 @@ export default function ClientPage() {
             minHeight: "calc(100vh - 48px)",
           }}
         >
-          <LeadCardsContainer handleClick={animateLeadCategory} />
+          <LeadCardsContainer
+            handleClick={animateLeadCategory}
+            isCatAnimated={isCatAnimated}
+          />
           {leadCategory && (
             <>
               {leadCategory === "DESIGN" && (
@@ -169,6 +194,39 @@ export default function ClientPage() {
           )}
         </Paper>
       </Container>
+      <Box
+        className="form-page"
+        sx={{
+          position: "fixed",
+          top: 0,
+          left: 0,
+          width: "100%",
+          height: "100vh",
+          background: colors.bgPrimary,
+          zIndex: leadCategory === "CONSULTATION" ? 200000000000 : 20,
+          display: "none",
+          overflowY: "auto",
+        }}
+      >
+        <Container
+          maxWidth="md"
+          sx={{
+            overflow: "hidden",
+            pb: { xs: 16, md: 10 },
+            pt: 10,
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <CompleteRegisterForm
+            location={location}
+            category={leadCategory}
+            item={leadItem}
+            leadId={leadId}
+          />
+        </Container>
+      </Box>
     </>
   );
 }

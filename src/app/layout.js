@@ -1,8 +1,8 @@
 import "./globals.css";
 import colors from "@/app/helpers/colors.js";
 import { Noto_Kufi_Arabic } from "next/font/google";
-import DotsLoader from "./components/feedback/loaders/DotsLoading";
 import MUIContextProvider from "./providers/MUIContext";
+import DotsLoader from "./UiComponents/feedback/loaders/DotsLoading";
 
 const noto = Noto_Kufi_Arabic({
   weight: ["400", "500", "700"],

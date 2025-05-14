@@ -1,7 +1,7 @@
 import { Suspense } from "react";
-import ClientPage from "./components/client-page/ClientPage";
-import FloatingWhatsAppButton from "./components/buttons/FloatingWhatsappButton";
 import LanguageProvider from "./providers/LanguageProvider";
+import ClientPage from "./UiComponents/client-page/ClientPage";
+import FloatingWhatsAppButton from "./UiComponents/buttons/FloatingWhatsappButton";
 
 export default function page() {
   return (

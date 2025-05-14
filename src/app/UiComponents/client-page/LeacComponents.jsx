@@ -16,7 +16,7 @@ import {
   designLeadTypes,
   leads,
   questions,
-} from "@/app/components/client-page/clientPageData.js";
+} from "@/app/UiComponents/client-page/clientPageData.js";
 import { LeadType } from "@/app/helpers/constants.js";
 import colors from "@/app/helpers/colors.js";
 import React from "react";
