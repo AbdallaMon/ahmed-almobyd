@@ -7,14 +7,14 @@ import {
   Header,
   LeadCardsContainer,
   LeadCategoryItemsContainer,
-} from "@/app/UiComponents/client-page/LeacComponents.jsx";
+} from "@/app/components/client-page/LeacComponents.jsx";
 import {
   animateFormPage,
   animateLeadCategoryItem,
   animateLocationItem,
   initialAnimation,
   reverseAnimation,
-} from "@/app/UiComponents/client-page/function.js";
+} from "@/app/components/client-page/function.js";
 import { useLanguageContext } from "@/app/providers/LanguageProvider.jsx";
 import { useSearchParams } from "next/navigation";
 
