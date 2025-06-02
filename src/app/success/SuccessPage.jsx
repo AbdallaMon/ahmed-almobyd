@@ -51,7 +51,7 @@ export default function SuccessPage() {
     if (session_id && clientLeadId) {
       const updatePaymentStatus = async () => {
         const request = await getData({
-          url: `client/payment-status?sessionId=${session_id}&clientLeadId=${clientLeadId}&`,
+          url: `client/payment-status?sessionId=${session_id}&clientLeadId=${clientLeadId}&lng=${lng}&`,
           setLoading,
         });
         if (request && request.status === 200) {

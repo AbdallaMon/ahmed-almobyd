@@ -57,7 +57,6 @@ function DesignLeadForm({ category, item, location, leadId }) {
     priceOption: null,
     file: null,
     clientDescription: null,
-    timeToContact: null,
     country: null,
   });
   const [renderSuccess, setRenderSuccess] = useState(false);
@@ -354,7 +353,7 @@ function DesignLeadForm({ category, item, location, leadId }) {
               )}
               {location === "INSIDE_UAE" ? (
                 <>
-                  <MobileDateTimePicker
+                  {/* <MobileDateTimePicker
                     label={translate(
                       "Choose a time to contact you? (optional)"
                     )}
@@ -363,13 +362,13 @@ function DesignLeadForm({ category, item, location, leadId }) {
                     value={formData.timeToContact}
                     onChange={handleDateChange}
                     orientation=""
-                  />
-                  <Typography
+                  /> */}
+                  {/* <Typography
                     variant="subtitle2"
                     sx={{ margin: "8px 0 -10px !important" }}
                   >
                     {translate("Choose a time between 10 AM to 7 PM.")}
-                  </Typography>
+                  </Typography> */}
                 </>
               ) : (
                 <>

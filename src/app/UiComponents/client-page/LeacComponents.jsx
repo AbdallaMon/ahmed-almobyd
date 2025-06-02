@@ -442,7 +442,7 @@ export function Header({ reverseAnimation }) {
             className="logo"
             style={{ marginLeft: isMobile ? "-20px" : "-24px" }}
             sx={{
-              height: 65,
+              height: 0,
               width: "auto",
             }}
           />
