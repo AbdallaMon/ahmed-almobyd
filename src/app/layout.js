@@ -21,7 +21,7 @@ export const metadata = {
     title: "احجز استشارتك مع أحمد المبيض",
     description:
       "استفد من خبرة المهندس أحمد المبيض في التصميم الداخلي الفاخر. احجز موعدك الآن لتحصل على رؤية تصميمية مخصصة لمساحتك السكنية أو التجارية.",
-    image: "/about/personal.jpeg", // استبدلها بصورة ذات طابع استشاري إن وُجد
+    image: "https://eng.ahmadmobayed.com/about/personal.jpeg", // استبدلها بصورة ذات طابع استشاري إن وُجد
     url: "https://ahmadmobayed.com/register", // عدّل الرابط حسب صفحتك
     type: "website",
   },
@@ -30,7 +30,7 @@ export const metadata = {
     title: "احجز استشارتك مع أحمد المبيض",
     description:
       "Transforming visions into luxurious and elegant living spaces.",
-    images: ["/about/personal.jpeg"], // Path to your Twitter image
+    images: ["https://eng.ahmadmobayed.com/about/personal.jpeg"], // Path to your Twitter image
   },
 
   icons: {
