@@ -62,7 +62,7 @@ export default function SimpleFileInput({
           type="file"
           InputLabelProps={{ shrink: true }}
           variant={variant}
-          helperText="Max file uploads : 50mb"
+          helperText="Max file uploads : 80mb"
           fullWidth
           accept={input && input?.accept}
           onChange={(e) => {
