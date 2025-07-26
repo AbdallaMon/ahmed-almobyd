@@ -34,6 +34,8 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { CountrySelector } from "../FinalSelectionForm";
 import gsap from "gsap";
 import { ConsultLevels } from "../consult-levels/ConsultLevels";
+import { useUploadContext } from "@/app/providers/UploadingProgressProvider";
+import { uploadInChunks } from "@/app/helpers/functions/uploadAsChunk";
 export function CompleteRegisterForm({ category, item, location, leadId }) {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -66,6 +68,7 @@ function DesignLeadForm({ category, item, location, leadId }) {
 
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
+  const { setProgress, setOverlay } = useUploadContext();
 
   const [defaultCountry, setDefaultCountry] = useState("AE");
   const handleChange = (e) => {
@@ -128,19 +131,17 @@ function DesignLeadForm({ category, item, location, leadId }) {
       return;
     }
     if (formData.file) {
-      const form = new FormData();
-      form.append("file", formData.file);
-      const fileUpload = await handleRequestSubmit(
-        form,
-        setLoading,
-        "client/upload",
-        true,
-        translate("Uploading file")
+      const fileUpload = await uploadInChunks(
+        formData.file,
+        setProgress,
+        setOverlay,
+        true
       );
+
       if (fileUpload.status === 200) {
         const data = {
           ...formData,
-          url: fileUpload.fileUrls.file[0],
+          url: fileUpload.url,
           category,
           item,
           lng,
