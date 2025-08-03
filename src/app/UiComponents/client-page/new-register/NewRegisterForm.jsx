@@ -331,7 +331,7 @@ export function NewRegisterForm() {
                   ) : (
                     <IoArrowForwardCircleOutline />
                   )}
-                  {translate("Book Now 29 DOLLAR")}
+                  {translate("Book Now 39 DOLLAR")}
                 </Button>
                 <Box sx={{ flex: 1 }}>
                   <Typography
@@ -346,40 +346,11 @@ export function NewRegisterForm() {
                     }}
                   >
                     {translate(
-                      "Your time and ours is valuable, which is why this appointment is reserved for serious clients with a small symbolic fee that will be fully deducted upon signing a contract."
+                      "Your time and ours is valuable. If we are unable to provide a suitable solution for you, the full amount will be refunded."
                     )}{" "}
                   </Typography>
                 </Box>
               </Box>
-              {/* <Button
-                variant="contained"
-                onClick={handleSubmit}
-                size="large"
-                fullWidth
-                sx={{
-                  borderRadius: 2,
-                  padding: "16px",
-                  fontSize: "1.1rem",
-                  fontWeight: 700,
-                  textTransform: "none",
-                  boxShadow: "0 4px 14px rgba(0, 0, 0, 0.1)",
-                  transition: "all 0.3s ease",
-                  display: "flex",
-                  gap: 0.5,
-                  flexDirection: lng === "ar" ? "row" : "row-reverse",
-                  "&:hover": {
-                    transform: "translateY(-2px)",
-                    boxShadow: "0 6px 20px rgba(0, 0, 0, 0.15)",
-                  },
-                }}
-              >
-                {lng === "ar" ? (
-                  <IoArrowBackCircleOutline />
-                ) : (
-                  <IoArrowForwardCircleOutline />
-                )}
-                {translate("Book Now 29 DOLLAR")}
-              </Button> */}
             </Grid>
           </Grid>
         </Paper>

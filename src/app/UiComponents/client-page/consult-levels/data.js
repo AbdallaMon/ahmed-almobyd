@@ -107,8 +107,8 @@ export const consultLevelsData = {
     },
   ],
   paymentData: {
-    description: "٢٩ دولار تُخصم بالكامل عند التعاقد",
-    button: "احجز الان ٢٩ دولار",
+    description: "٣٩ دولار تُخصم بالكامل عند التعاقد",
+    button: "احجز الان ٣٩ دولار",
   },
 };
 
@@ -221,7 +221,7 @@ export const enConsultLevelsData = {
     },
   ],
   paymentData: {
-    description: "29 dollars – fully deducted upon contracting.",
-    button: "Book Now 29 DOLLAR",
+    description: "39 dollars – fully deducted upon contracting.",
+    button: "Book Now 39 DOLLAR",
   },
 };

@@ -72,14 +72,13 @@ export const dictionary = {
   "Villa Under Construction": "فيلا تحت الإنشاء",
   "Part of Home": "جزء من المنزل",
   Commercial: "تجاري",
-  "29 dollars – fully deducted upon contracting.":
-    "٢٩ دولار تُخصم بالكامل عند التعاقد",
-  "Book Now 29 DOLLAR": "احجز الان ٢٩ دولار",
+  "39 dollars – fully deducted upon contracting.":
+    "٣٩ دولار تُخصم بالكامل عند التعاقد",
+  "Book Now 39 DOLLAR": "احجز الان ٣٩ دولار",
 
   "Success!": "نجاح!",
-  "Your time and ours is valuable, which is why this appointment is reserved for serious clients with a small symbolic fee that will be fully deducted upon signing a contract.":
-    "وقتك ووقتنا ثمين، ولهذا الحجز مخصص للعملاء الجادين بمبلغ رمزي بسيط يُخصم بالكامل عند التعاقد",
-  // Emirates
+  "Your time and ours is valuable. If we are unable to provide a suitable solution for you, the full amount will be refunded.":
+    "وقتك ووقتنا ثمين، في حال لم نتمكن من تقديم الحل المناسب لك، سيتم استرجاع المبلغ المدفوع بالكامل.", // Emirates
   "Out side emirates": "خارج الإمارات",
   Dubai: "دبي",
   "Abu Dhabi": "أبو ظبي",
