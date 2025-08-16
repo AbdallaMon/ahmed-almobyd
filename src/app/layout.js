@@ -15,23 +15,25 @@ const noto = Noto_Kufi_Arabic({
   display: "swap",
 });
 export const metadata = {
-  title: "أحمد المبيض | حجز استشارة تصميم داخلي",
-  description: `احجز استشارتك الآن مع المهندس أحمد المبيض، المتخصص في التصميم الداخلي الفاخر. اكتشف كيف يمكنه تحويل مساحتك إلى مكان يجمع بين الأناقة والراحة والوظيفية. استشارات مخصصة للمجالس، المداخل، غرف المعيشة، والفلل.`,
-  keywords: `أحمد المبيض، استشارة تصميم داخلي، حجز استشارة، تصميم فلل، تصميم مجالس، مهندس ديكور، تصميم داخلي، ديكورات فاخرة، استشارات هندسية، أحمد المبيض استشارات، تصميم إماراتي`,
+  title: "Eng. أحمد المبيض | حجز استشارة تصميم داخلي",
+  description: `احجز استشارتك الآن مع Eng. أحمد المبيض، المتخصص في التصميم الداخلي الفاخر. اكتشف كيف يمكنه تحويل مساحتك إلى مكان يجمع بين الأناقة، الراحة، والوظيفية. استشارات مخصصة للمجالس، المداخل، غرف المعيشة، والفلل الفاخرة.`,
+  keywords: `Eng. Ahmad Al-Mobayed, أحمد المبيض, استشارة تصميم داخلي, حجز استشارة, تصميم فلل, تصميم مجالس, مهندس ديكور, تصميم داخلي, ديكورات فاخرة, استشارات هندسية, تصميم إماراتي, Luxury Interior Design, Villa Design UAE`,
+
   openGraph: {
-    title: "احجز استشارتك مع أحمد المبيض",
+    title: "احجز استشارتك مع Eng. أحمد المبيض",
     description:
-      "استفد من خبرة المهندس أحمد المبيض في التصميم الداخلي الفاخر. احجز موعدك الآن لتحصل على رؤية تصميمية مخصصة لمساحتك السكنية أو التجارية.",
-    image: "https://eng.ahmadmobayed.com/about/personal.jpeg", // استبدلها بصورة ذات طابع استشاري إن وُجد
-    url: "https://ahmadmobayed.com/register", // عدّل الرابط حسب صفحتك
+      "استفد من خبرة Eng. أحمد المبيض في التصميم الداخلي الفاخر. احجز موعدك الآن لتحصل على رؤية تصميمية مخصصة لمساحتك السكنية أو التجارية مع لمسات من الفخامة العصرية.",
+    image: "https://eng.ahmadmobayed.com/about/personal.jpeg",
+    url: "https://ahmadmobayed.com/register",
     type: "website",
   },
+
   twitter: {
     card: "summary_large_image",
-    title: "احجز استشارتك مع أحمد المبيض",
+    title: "احجز استشارتك مع Eng. أحمد المبيض",
     description:
-      "Transforming visions into luxurious and elegant living spaces.",
-    images: ["https://eng.ahmadmobayed.com/about/personal.jpeg"], // Path to your Twitter image
+      "Transforming visions into luxurious, elegant, and functional living spaces.",
+    images: ["https://eng.ahmadmobayed.com/about/personal.jpeg"],
   },
 
   icons: {

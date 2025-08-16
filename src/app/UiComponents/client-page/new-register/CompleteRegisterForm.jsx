@@ -22,6 +22,7 @@ import { handleRequestSubmit } from "@/app/helpers/functions/handleSubmit.js";
 import {
   countriesByRegion,
   Emirate,
+  LEAD_SOURCE_LABELS,
   LeadCategory,
   LeadType,
 } from "@/app/helpers/constants.js";
@@ -60,6 +61,7 @@ function DesignLeadForm({ category, item, location, leadId }) {
     file: null,
     clientDescription: null,
     country: null,
+    discoverySource: null,
   });
   const [renderSuccess, setRenderSuccess] = useState(false);
   const [clientLead, setClientLead] = useState(null);
@@ -77,11 +79,10 @@ function DesignLeadForm({ category, item, location, leadId }) {
     if (name === "phone" && !/^\d*$/.test(value)) {
       return; // Prevent setting invalid value
     }
+    console.log(name, "name", value, "value");
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
-  function handleDateChange(value) {
-    setFormData((prev) => ({ ...prev, timeToContact: value }));
-  }
+
   const handleEmirateChange = (event, newValue) => {
     setFormData((prev) => ({ ...prev, emirate: event.target.value }));
   };
@@ -128,6 +129,10 @@ function DesignLeadForm({ category, item, location, leadId }) {
     }
     if (location !== "INSIDE_UAE" && !formData.country) {
       setAlertError(translate("Please fill all the fields."));
+      return;
+    }
+    if (!formData.discoverySource) {
+      setAlertError(translate("Please tell us how you found us."));
       return;
     }
     if (formData.file) {
@@ -382,6 +387,26 @@ function DesignLeadForm({ category, item, location, leadId }) {
                   />
                 </>
               )}
+              <FormControl fullWidth variant="outlined">
+                <InputLabel id="discovery-source-label">
+                  {translate("Where did you hear about us?")}
+                </InputLabel>
+                <Select
+                  labelId="discovery-source-label"
+                  id="discovery-source"
+                  label={translate("Where did you hear about us?")}
+                  value={formData.discoverySource} // Ensure you define this state
+                  onChange={handleChange}
+                  name="discoverySource"
+                >
+                  {Object.entries(LEAD_SOURCE_LABELS).map(([key, label]) => (
+                    <MenuItem value={key} key={key}>
+                      {label[lng]}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+
               <SimpleFileInput
                 label={translate("Add an attachment (optional)")}
                 id="file"

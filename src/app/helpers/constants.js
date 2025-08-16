@@ -155,6 +155,8 @@ export const dictionary = {
   "Make your home your personal brand": "اجعل منزلك براندك الخاص",
   "You're just one step away from starting your project!":
     "خطوة واحدة تفصلنا عن بدء العمل على مشروعك!",
+  "Where did you hear about us?": "من وين تعرفت علينا؟",
+  "Please tell us how you found us.": "يرجى إخبارنا كيف عثرت علينا.",
 };
 
 export const MediaType = {
@@ -602,4 +604,21 @@ export const countriesByRegion = {
     "Tuvalu",
     "Vanuatu",
   ],
+};
+
+export const LEAD_SOURCE_LABELS = {
+  TIKTOK: { en: "TikTok", ar: "تيك توك" },
+  TV: { en: "TV", ar: "تلفاز" },
+  FACEBOOK: { en: "Facebook", ar: "فيسبوك" },
+  YOUTUBE: { en: "YouTube", ar: "يوتيوب" },
+  GOOGLE: { en: "Google", ar: "جوجل" },
+  INTERIOR_MAGAZINE_SITE: {
+    en: "Interior design magazine/site",
+    ar: "مجلة/موقع تصميم داخلي",
+  },
+  REFERRAL: {
+    en: "Referral from friend or previous client",
+    ar: "توصية من صديق أو عميل سابق",
+  },
+  OTHER: { en: "Other", ar: "أخرى" },
 };
