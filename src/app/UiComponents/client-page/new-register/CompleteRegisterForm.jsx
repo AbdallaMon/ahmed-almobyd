@@ -79,7 +79,6 @@ function DesignLeadForm({ category, item, location, leadId }) {
     if (name === "phone" && !/^\d*$/.test(value)) {
       return; // Prevent setting invalid value
     }
-    console.log(name, "name", value, "value");
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
