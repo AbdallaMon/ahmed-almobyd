@@ -1,10 +1,9 @@
 "use client";
 import { useLanguageContext } from "@/app/providers/LanguageProvider.jsx";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useAlertContext } from "@/app/providers/MuiAlert.jsx";
 import { useToastContext } from "@/app/providers/ToastLoadingProvider.js";
 import {
-  Autocomplete,
   Box,
   Button,
   CircularProgress,
@@ -23,42 +22,77 @@ import { handleRequestSubmit } from "@/app/helpers/functions/handleSubmit.js";
 import {
   countriesByRegion,
   Emirate,
+  LEAD_SOURCE_LABELS,
   LeadCategory,
   LeadType,
 } from "@/app/helpers/constants.js";
 import SimpleFileInput from "@/app/UiComponents/formComponents/SimpleFileInput.jsx";
 import { priceRange } from "@/app/UiComponents/client-page/clientPageData.js";
-import { matchIsValidTel, MuiTelInput } from "mui-tel-input";
-import { MobileDateTimePicker } from "@mui/x-date-pickers";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import "dayjs/locale/en-gb";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { uploadInChunks } from "@/app/helpers/functions/uploadAsChunk";
+import gsap from "gsap";
 import { useUploadContext } from "@/app/providers/UploadingProgressProvider";
-export function FinalSelectionForm({
-  category,
-  item,
-  location,
-  notClientPage,
-}) {
+import { uploadInChunks } from "@/app/helpers/functions/uploadAsChunk";
+import { CountrySelector } from "../FinalSelectionForm";
+import { ConsultLevels } from "../consult-levels/ConsultLevels";
+import { matchIsValidTel, MuiTelInput } from "mui-tel-input";
+import { toast } from "react-toastify";
+import {
+  Failed,
+  Success,
+} from "@/app/UiComponents/feedback/loaders/toast/ToastUpdate";
+
+async function submitInitialRequest(data, setLoading, lng) {
+  const toastMessage = lng === "ar" ? "جاري الإرسال..." : "Submitting...";
+  const toastId = toast.loading(toastMessage);
+  const url = `client/new-lead/register`;
+  const id = toastId;
+  try {
+    const request = await fetch(process.env.NEXT_PUBLIC_URL + "/" + url, {
+      method: "POST",
+      body: JSON.stringify(data),
+      headers: { "Content-Type": "application/json" },
+      credentials: "include",
+    });
+    const reqStatus = request.status;
+    const response = await request.json();
+    response.status = reqStatus;
+    if (reqStatus === 200) {
+      toast.update(
+        id,
+        Success(
+          lng === "ar"
+            ? "تم تسجيل البيانات الاولية من فضلك انتظر"
+            : "Initial data registered. Please wait."
+        )
+      );
+    } else {
+      toast.update(
+        id,
+        Failed(lng === "ar" ? "حدثت مشكلة" : "Something went wrong")
+      );
+    }
+    return response;
+  } catch (err) {
+    toast.update(
+      id,
+      Failed(lng === "ar" ? "حدثت مشكلة" : "Something went wrong")
+    );
+    return { status: 500, message: "Error, " + err.message };
+  } finally {
+    setLoading(false);
+  }
+}
+export function TempRegisterForm({ category, item, location }) {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      {category === "DESIGN" ? (
-        <DesignLeadForm
-          category={category}
-          item={item}
-          location={location}
-          notClientPage={notClientPage}
-        />
-      ) : (
-        <ConsultLeadForm category={category} />
-      )}
+      <DesignLeadForm category={category} item={item} location={location} />
     </LocalizationProvider>
   );
 }
-export function DesignLeadForm({ category, item, location, notClientPage }) {
+function DesignLeadForm({ category, item, location }) {
   const { translate, lng } = useLanguageContext();
-
   const [formData, setFormData] = useState({
     name: "",
     phone: "",
@@ -68,20 +102,18 @@ export function DesignLeadForm({ category, item, location, notClientPage }) {
     priceOption: null,
     file: null,
     clientDescription: null,
-    timeToContact: null,
     country: null,
+    discoverySource: null,
   });
   const [renderSuccess, setRenderSuccess] = useState(false);
   const [clientLead, setClientLead] = useState(null);
   const { setAlertError } = useAlertContext();
   const { setLoading } = useToastContext();
-  const { setProgress, setOverlay } = useUploadContext();
 
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
-  function handlePhoneChange(value) {
-    setFormData((prev) => ({ ...prev, phone: value }));
-  }
+  const { setProgress, setOverlay } = useUploadContext();
+
   const [defaultCountry, setDefaultCountry] = useState("AE");
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -91,8 +123,8 @@ export function DesignLeadForm({ category, item, location, notClientPage }) {
     }
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
-  function handleDateChange(value) {
-    setFormData((prev) => ({ ...prev, timeToContact: value }));
+  function handlePhoneChange(value) {
+    setFormData((prev) => ({ ...prev, phone: value }));
   }
   const handleEmirateChange = (event, newValue) => {
     setFormData((prev) => ({ ...prev, emirate: event.target.value }));
@@ -126,8 +158,7 @@ export function DesignLeadForm({ category, item, location, notClientPage }) {
     });
   }, []);
   const handleSubmit = async () => {
-    const { name, phone, priceRange, file, emirate, priceOption, email } =
-      formData;
+    const { name, phone, email, priceRange, emirate, priceOption } = formData;
     if (!matchIsValidTel(phone)) {
       setAlertError(translate("Invalid phone"));
       return;
@@ -149,6 +180,34 @@ export function DesignLeadForm({ category, item, location, notClientPage }) {
       setAlertError(translate("Please fill all the fields."));
       return;
     }
+    if (
+      (!emirate && location === "INSIDE_UAE") ||
+      (location === "INSIDE_UAE" &&
+        priceRange[0] === 0 &&
+        priceRange[1] === 0 &&
+        !priceOption)
+    ) {
+      setAlertError(translate("Please fill all the fields."));
+      return;
+    }
+    if (location !== "INSIDE_UAE" && !formData.country) {
+      setAlertError(translate("Please fill all the fields."));
+      return;
+    }
+    if (!formData.discoverySource) {
+      setAlertError(translate("Please tell us how you found us."));
+      return;
+    }
+    const initialRequest = await submitInitialRequest(
+      formData,
+      setLoading,
+      lng
+    );
+
+    if (initialRequest.status !== 200) {
+      return;
+    }
+    const leadId = initialRequest.data.id;
     if (formData.file) {
       const fileUpload = await uploadInChunks(
         formData.file,
@@ -165,12 +224,11 @@ export function DesignLeadForm({ category, item, location, notClientPage }) {
           item,
           lng,
           location,
-          notClientPage,
         };
         const request = await handleRequestSubmit(
           data,
           setLoading,
-          "client/new-lead",
+          `client/new-lead/complete-register/${leadId}`,
           false,
           translate("Submitting")
         );
@@ -180,18 +238,11 @@ export function DesignLeadForm({ category, item, location, notClientPage }) {
         }
       }
     } else {
-      const data = {
-        ...formData,
-        category,
-        item,
-        lng,
-        location,
-        notClientPage,
-      };
+      const data = { ...formData, category, item, lng, location };
       const request = await handleRequestSubmit(
         data,
         setLoading,
-        "client/new-lead",
+        `client/new-lead/complete-register/${leadId}`,
         false,
         translate("Submitting")
       );
@@ -222,7 +273,6 @@ export function DesignLeadForm({ category, item, location, notClientPage }) {
             formData={formData}
             clientLead={clientLead}
             lng={lng}
-            notClientPage={notClientPage}
           />
         ) : (
           <Paper
@@ -243,7 +293,9 @@ export function DesignLeadForm({ category, item, location, notClientPage }) {
                 color: theme.palette.primary.main,
               }}
             >
-              {translate("Complete Your Request")}
+              {translate(
+                "You're just one step away from starting your project!"
+              )}
             </Typography>
             <Box
               sx={{
@@ -264,68 +316,69 @@ export function DesignLeadForm({ category, item, location, notClientPage }) {
               </Typography>
             </Box>
             <Stack spacing={3}>
-              <TextField
-                fullWidth
-                label={translate("Name")}
-                name="name"
-                variant="outlined"
-                value={formData.name}
-                onChange={handleChange}
-                InputProps={{
-                  sx: {
-                    borderRadius: 2,
-                    "&:hover": {
-                      "& fieldset": {
-                        borderColor: "primary.main",
+              <Stack spacing={3}>
+                <TextField
+                  fullWidth
+                  label={translate("Name")}
+                  name="name"
+                  variant="outlined"
+                  value={formData.name}
+                  onChange={handleChange}
+                  InputProps={{
+                    sx: {
+                      borderRadius: 2,
+                      "&:hover": {
+                        "& fieldset": {
+                          borderColor: "primary.main",
+                        },
                       },
                     },
-                  },
-                }}
-              />
-              <MuiTelInput
-                defaultCountry={defaultCountry}
-                value={formData.phone}
-                id="phone"
-                name="phone"
-                label={translate("Phone")}
-                onChange={handlePhoneChange}
-                error={
-                  matchIsValidTel(formData.phone) || formData.phone === ""
-                    ? false
-                    : true
-                }
-                helperText={
-                  matchIsValidTel(formData.phone) || formData.phone === ""
-                    ? ""
-                    : translate("Invalid phone")
-                }
-                fullWidth
-                sx={{
-                  "& .MuiInputBase-root": { borderRadius: 2 },
-                  "&:hover fieldset": { borderColor: "primary.main" },
-                }}
-              />
+                  }}
+                />
+                <MuiTelInput
+                  defaultCountry={defaultCountry}
+                  value={formData.phone}
+                  id="phone"
+                  name="phone"
+                  label={translate("Phone")}
+                  onChange={handlePhoneChange}
+                  error={
+                    matchIsValidTel(formData.phone) || formData.phone === ""
+                      ? false
+                      : true
+                  }
+                  helperText={
+                    matchIsValidTel(formData.phone) || formData.phone === ""
+                      ? ""
+                      : translate("Invalid phone")
+                  }
+                  fullWidth
+                  sx={{
+                    "& .MuiInputBase-root": { borderRadius: 2 },
+                    "&:hover fieldset": { borderColor: "primary.main" },
+                  }}
+                />
 
-              <TextField
-                fullWidth
-                label={translate("Email")}
-                name="email"
-                type="email"
-                variant="outlined"
-                value={formData.email}
-                onChange={handleChange}
-                InputProps={{
-                  sx: {
-                    borderRadius: 2,
-                    "&:hover": {
-                      "& fieldset": {
-                        borderColor: "primary.main",
+                <TextField
+                  fullWidth
+                  label={translate("Email")}
+                  name="email"
+                  type="email"
+                  variant="outlined"
+                  value={formData.email}
+                  onChange={handleChange}
+                  InputProps={{
+                    sx: {
+                      borderRadius: 2,
+                      "&:hover": {
+                        "& fieldset": {
+                          borderColor: "primary.main",
+                        },
                       },
                     },
-                  },
-                }}
-              />
-
+                  }}
+                />
+              </Stack>
               {location === "INSIDE_UAE" && (
                 <>
                   <FormControl fullWidth variant="outlined">
@@ -442,7 +495,7 @@ export function DesignLeadForm({ category, item, location, notClientPage }) {
               )}
               {location === "INSIDE_UAE" ? (
                 <>
-                  <MobileDateTimePicker
+                  {/* <MobileDateTimePicker
                     label={translate(
                       "Choose a time to contact you? (optional)"
                     )}
@@ -451,13 +504,13 @@ export function DesignLeadForm({ category, item, location, notClientPage }) {
                     value={formData.timeToContact}
                     onChange={handleDateChange}
                     orientation=""
-                  />
-                  <Typography
+                  /> */}
+                  {/* <Typography
                     variant="subtitle2"
                     sx={{ margin: "8px 0 -10px !important" }}
                   >
                     {translate("Choose a time between 10 AM to 7 PM.")}
-                  </Typography>
+                  </Typography> */}
                 </>
               ) : (
                 <>
@@ -468,27 +521,28 @@ export function DesignLeadForm({ category, item, location, notClientPage }) {
                     value={formData.country}
                     fullWidth={true}
                   />
-                  {/* <TextField
-                    fullWidth
-                    label={translate("Country")}
-                    name="country"
-                    type="text"
-                    variant="outlined"
-                    value={formData.country}
-                    onChange={handleChange}
-                    InputProps={{
-                      sx: {
-                        borderRadius: 2,
-                        "&:hover": {
-                          "& fieldset": {
-                            borderColor: "primary.main",
-                          },
-                        },
-                      },
-                    }}
-                  /> */}
                 </>
               )}
+              <FormControl fullWidth variant="outlined">
+                <InputLabel id="discovery-source-label">
+                  {translate("Where did you hear about us?")}
+                </InputLabel>
+                <Select
+                  labelId="discovery-source-label"
+                  id="discovery-source"
+                  label={translate("Where did you hear about us?")}
+                  value={formData.discoverySource} // Ensure you define this state
+                  onChange={handleChange}
+                  name="discoverySource"
+                >
+                  {Object.entries(LEAD_SOURCE_LABELS).map(([key, label]) => (
+                    <MenuItem value={key} key={key}>
+                      {label[lng]}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+
               <SimpleFileInput
                 label={translate("Add an attachment (optional)")}
                 id="file"
@@ -519,55 +573,7 @@ export function DesignLeadForm({ category, item, location, notClientPage }) {
     </>
   );
 }
-function ConsultLeadForm({ category }) {
-  const { lng } = useLanguageContext();
-  useEffect(() => {
-    function redirectToPage() {
-      window.setTimeout(() => {
-        window.location.href = `https://decorstores.ltd/${
-          lng === "en" ? lng : ""
-        }/products/consultation-with-engineer-ahmed`;
-      }, 500);
-    }
 
-    // Call the function when the component mounts
-    if (category && category === "CONSULTATION") {
-      redirectToPage();
-    }
-  }, [category]);
-
-  return (
-    <Box
-      sx={{
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "center",
-        alignItems: "center",
-        textAlign: "center",
-        padding: "16px",
-      }}
-    >
-      <Typography
-        variant="h5"
-        sx={{
-          fontWeight: "bold",
-          marginBottom: 1,
-          display: "flex",
-          gap: 2,
-          alignItems: "center",
-        }}
-      >
-        <CircularProgress sx={{ marginBottom: 2 }} />
-        {lng === "ar" ? "...نقوم بإعادة توجيهك" : "We are redirecting you..."}
-      </Typography>
-      <Typography variant="body1" sx={{ color: "gray", marginBottom: 2 }}>
-        {lng === "ar"
-          ? ".يرجى الانتظار قليلاً بينما نقوم بتحضير الصفحة"
-          : "Please wait while we prepare the page for you."}
-      </Typography>
-    </Box>
-  );
-}
 const orderedCountriesWithRegions = [];
 Object.keys(countriesByRegion).forEach((region) => {
   countriesByRegion[region].forEach((country) => {
@@ -578,142 +584,29 @@ Object.keys(countriesByRegion).forEach((region) => {
   });
 });
 
-// Extract just the country names for the options list while preserving order
-const allCountriesOrdered = orderedCountriesWithRegions.map(
-  (item) => item.country
-);
-
-export const CountrySelector = ({
-  value,
-  onChange,
-  label,
-  name,
-  translate,
-  fullWidth = true,
-}) => {
-  const handleCountryChange = (event, newValue) => {
-    // Create a synthetic event object that mimics the structure expected by handleChange
-    const syntheticEvent = {
-      target: {
-        name: name || "country",
-        value: newValue,
-      },
-    };
-
-    onChange(syntheticEvent);
-  };
-
-  // Find the region for a country
-  const getRegionForCountry = (country) => {
-    const item = orderedCountriesWithRegions.find(
-      (item) => item.country === country
-    );
-    return item ? item.region : "Other";
-  };
-
-  return (
-    <Autocomplete
-      id="country-selector"
-      options={allCountriesOrdered}
-      value={value || null}
-      onChange={handleCountryChange}
-      groupBy={getRegionForCountry}
-      renderInput={(params) => (
-        <TextField
-          {...params}
-          label={translate ? translate("Country") : label || "Country"}
-          name={name || "country"}
-          variant="outlined"
-          fullWidth={fullWidth}
-          InputProps={{
-            ...params.InputProps,
-            sx: {
-              borderRadius: 2,
-              "&:hover": {
-                "& fieldset": {
-                  borderColor: "primary.main",
-                },
-              },
-            },
-          }}
-        />
-      )}
-    />
-  );
-};
-export function SuccessPage({ lng, clientLead, notClientPage }) {
-  const message =
-    lng === "ar"
-      ? "خطوة واحدة تفصلنا عن بدء العمل على مشروعك!، يرجى إتمام الدفع الآن."
-      : "You're just one step away from starting your project! Complete the payment now to proceed.";
+function SuccessPage({ lng, category, formData }) {
+  const { translate } = useLanguageContext();
 
   useEffect(() => {
-    if (lng && clientLead) {
-      if (notClientPage) {
-        window.location.reload();
-      } else {
-        window.location.href = `/register/checkout?leadId=${clientLead.id}&clientId=${clientLead.clientId}&lng=${lng}`;
-      }
-    }
-  }, [lng, clientLead]);
-  return <></>;
+    gsap.set(".reverse-button", {
+      display: "none",
+    });
+  }, []);
+
   return (
-    <Box
+    <Paper
+      elevation={4}
       sx={{
+        padding: 2,
+        borderRadius: 3,
+        backgroundColor: "#fff",
         textAlign: "center",
-        py: 8,
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        gap: 4,
-        direction: lng === "ar" ? "rtl" : "ltr",
-        backgroundColor: "white",
       }}
     >
-      <Typography variant="h5" component="h1" gutterBottom>
-        {message}
+      <Typography variant="body1" mb={1} p={4} fontSize="1.2rem">
+        {translate("Thank you for your submission. We will contact you soon.")}
       </Typography>
-
-      <CircularProgress color="primary" />
-
-      <Typography variant="body2" color="text.secondary">
-        {lng === "ar" ? "جاري التحويل..." : "Redirecting..."}
-      </Typography>
-    </Box>
+      <ConsultLevels lng={lng} />
+    </Paper>
   );
 }
-// function SuccessPage({ category, formData }) {
-//   const { translate } = useLanguageContext();
-
-//   useEffect(() => {
-//     gsap.set(".reverse-button", {
-//       display: "none",
-//     });
-//   }, []);
-
-//   return (
-//     <Paper
-//       elevation={4}
-//       sx={{
-//         padding: 3,
-//         borderRadius: 3,
-//         backgroundColor: "#fff",
-//         textAlign: "center",
-//       }}
-//     >
-//       <Typography
-//         variant="h4"
-//         sx={{
-//           color: "green",
-//           fontWeight: 700,
-//           marginBottom: 2,
-//         }}
-//       >
-//         {translate("Success!")}
-//       </Typography>
-//       <Typography variant="body1">
-//         {translate("Thank you for your submission. We will contact you soon.")}
-//       </Typography>
-//     </Paper>
-//   );
-// }
