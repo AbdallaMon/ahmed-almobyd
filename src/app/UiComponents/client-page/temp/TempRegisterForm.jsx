@@ -47,7 +47,7 @@ import {
 async function submitInitialRequest(data, setLoading, lng) {
   const toastMessage = lng === "ar" ? "جاري الإرسال..." : "Submitting...";
   const toastId = toast.loading(toastMessage);
-  const url = `client/new-lead/register`;
+  const url = `client/new-lead/register?lng=${lng}`;
   const id = toastId;
   try {
     const request = await fetch(process.env.NEXT_PUBLIC_URL + "/" + url, {
@@ -71,14 +71,19 @@ async function submitInitialRequest(data, setLoading, lng) {
     } else {
       toast.update(
         id,
-        Failed(lng === "ar" ? "حدثت مشكلة" : "Something went wrong")
+        Failed(
+          response.message ||
+            (lng === "ar" ? "حدثت مشكلة" : "Something went wrong")
+        )
       );
     }
     return response;
   } catch (err) {
     toast.update(
       id,
-      Failed(lng === "ar" ? "حدثت مشكلة" : "Something went wrong")
+      Failed(
+        err.message || (lng === "ar" ? "حدثت مشكلة" : "Something went wrong")
+      )
     );
     return { status: 500, message: "Error, " + err.message };
   } finally {
@@ -109,7 +114,7 @@ function DesignLeadForm({ category, item, location }) {
   const [renderSuccess, setRenderSuccess] = useState(false);
   const [clientLead, setClientLead] = useState(null);
   const { setAlertError } = useAlertContext();
-  const { setLoading } = useToastContext();
+  const { loading, setLoading } = useToastContext();
 
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
@@ -159,6 +164,7 @@ function DesignLeadForm({ category, item, location }) {
     });
   }, []);
   const handleSubmit = async () => {
+    if (loading) return;
     const { name, phone, email, priceRange, emirate, priceOption } = formData;
     if (!matchIsValidTel(phone)) {
       setAlertError(translate("Invalid phone"));
@@ -204,7 +210,7 @@ function DesignLeadForm({ category, item, location }) {
       setLoading,
       lng
     );
-
+    console.log(initialRequest, "initialRequest");
     if (initialRequest.status !== 200) {
       return;
     }
@@ -554,6 +560,7 @@ function DesignLeadForm({ category, item, location }) {
               <Button
                 variant="contained"
                 onClick={handleSubmit}
+                disabled={loading}
                 size="large"
                 sx={{
                   borderRadius: 2,
@@ -602,6 +609,7 @@ function SuccessPage({ lng, category, formData }) {
         borderRadius: 3,
         backgroundColor: "#fff",
         textAlign: "center",
+        direction: lng === "ar" ? "ltr" : "ltr",
       }}
     >
       <Alert severity="success">
