@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import { useAlertContext } from "@/app/providers/MuiAlert.jsx";
 import { useToastContext } from "@/app/providers/ToastLoadingProvider.js";
 import {
+  Alert,
   Box,
   Button,
   CircularProgress,
@@ -603,10 +604,14 @@ function SuccessPage({ lng, category, formData }) {
         textAlign: "center",
       }}
     >
-      <Typography variant="body1" mb={1} p={4} fontSize="1.2rem">
-        {translate("Thank you for your submission. We will contact you soon.")}
-      </Typography>
-      <ConsultLevels lng={lng} />
+      <Alert severity="success">
+        <Typography variant="body1" p={4} fontSize="1.2rem">
+          {translate(
+            "Thank you for your submission. We will contact you soon."
+          )}
+        </Typography>
+      </Alert>
+      {/* <ConsultLevels lng={lng} /> */}
     </Paper>
   );
 }
