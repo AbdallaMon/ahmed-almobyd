@@ -518,7 +518,7 @@ export function reverseAnimation({
       setLocation("");
     });
   } else if (leadCategory && isCatAnimated && !isReversing && !isAnimating) {
-    window.location.href = "https://eng.ahmadmobayed.com/";
+    window.location.href = "/";
     return;
     setIsReversing(true);
     const tl = gsap.timeline();
