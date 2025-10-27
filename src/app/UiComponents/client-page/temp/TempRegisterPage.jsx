@@ -216,9 +216,11 @@ export default function TempRegisterPage({ leadId }) {
               : (leadCategory !== "DESIGN" && !leadItem) || leadItem
               ? "100vh"
               : "auto",
-            overflow: { md: "hidden" },
+            // overflow: { md: "hidden" },
+            height: "fit-content",
             py: { xs: 3, md: 4 },
-            pb: { xs: 16, md: 10 },
+            pb: { xs: leadCategory ? 25 : 18, md: 19 },
+            ...(leadCategory && { pt: { xs: 12, md: 12 } }),
           }}
         >
           <TempRegisterForm
