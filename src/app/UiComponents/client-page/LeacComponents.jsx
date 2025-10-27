@@ -70,7 +70,7 @@ export function DesignLeadsContainer({ handleClick }) {
   return (
     <Box
       className="design-cards-container"
-      sx={{ mt: isMobile ? "-700px" : "-540px" }}
+      sx={{ mt: isMobile ? "-900px" : "-540px" }}
     >
       <Title
         title={translate(questions.category)}

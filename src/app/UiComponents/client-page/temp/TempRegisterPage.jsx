@@ -211,12 +211,14 @@ export default function TempRegisterPage({ leadId }) {
         <Container
           maxWidth="md"
           sx={{
-            overflow: "hidden",
+            height: !leadCategory
+              ? "auto"
+              : (leadCategory !== "DESIGN" && !leadItem) || leadItem
+              ? "100vh"
+              : "auto",
+            overflow: { md: "hidden" },
+            py: { xs: 3, md: 4 },
             pb: { xs: 16, md: 10 },
-            pt: 10,
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
           }}
         >
           <TempRegisterForm
