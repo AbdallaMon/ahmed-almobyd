@@ -1,15 +1,21 @@
-import { Suspense } from "react";
-import LanguageProvider from "./providers/LanguageProvider";
-import ClientPage from "./UiComponents/client-page/ClientPage";
-import FloatingWhatsAppButton from "./UiComponents/buttons/FloatingWhatsappButton";
+"use client";
+import { useEffect } from "react";
+import DotsLoader from "./UiComponents/feedback/loaders/DotsLoading";
 
-export default function page() {
-  return (
-    <LanguageProvider>
-      <Suspense>
-        <ClientPage />
-        <FloatingWhatsAppButton />
-      </Suspense>
-    </LanguageProvider>
-  );
+export default function Page() {
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      window.location.href = "/register";
+    }
+  }, []);
+  return <DotsLoader />;
+
+  // return (
+  // <LanguageProvider>
+  //   <Suspense>
+  //     <ClientPage />
+  //     <FloatingWhatsAppButton />
+  //   </Suspense>
+  // </LanguageProvider>
+  // );
 }

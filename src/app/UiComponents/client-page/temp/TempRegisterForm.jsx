@@ -210,7 +210,6 @@ function DesignLeadForm({ category, item, location }) {
       setLoading,
       lng
     );
-    console.log(initialRequest, "initialRequest");
     if (initialRequest.status !== 200) {
       return;
     }
