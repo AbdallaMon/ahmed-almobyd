@@ -1,7 +1,6 @@
 import LanguageProvider from "@/app/providers/LanguageProvider.jsx";
 import { Suspense } from "react";
-import { NewRegisterForm } from "../UiComponents/client-page/new-register/NewRegisterForm";
-import TempRegisterPage from "../UiComponents/client-page/temp/TempRegisterPage";
+import TempRegisterPage from "../UiComponents/client-page/register/TempRegisterPage";
 export const metadata = {
   title:
     "Book an Interior Design Consultation with Eng. احمد المبيض - Dream Studio",

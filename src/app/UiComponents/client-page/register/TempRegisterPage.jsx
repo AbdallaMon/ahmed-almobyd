@@ -2,7 +2,6 @@
 import React, { useEffect, useState } from "react";
 import { Box, Container, Paper } from "@mui/material";
 import colors from "@/app/helpers/colors.js";
-import { FinalSelectionForm } from "@/app/UiComponents/client-page/FinalSelectionForm.jsx";
 import {
   DesignLeadsContainer,
   Header,
@@ -15,8 +14,8 @@ import {
   reverseAnimation,
 } from "@/app/UiComponents/client-page/function.js";
 import { useLanguageContext } from "@/app/providers/LanguageProvider.jsx";
-import { TempRegisterForm } from "./TempRegisterForm";
 import { animateRegisterLeadCategoryItem } from "../registerFunctions";
+import { TempRegisterForm } from "./TempRegisterForm";
 
 export default function TempRegisterPage({ leadId }) {
   const [leadCategory, setLeadCategory] = useState("DESIGN");
@@ -156,8 +155,8 @@ export default function TempRegisterPage({ leadId }) {
           height: !leadCategory
             ? "auto"
             : (leadCategory !== "DESIGN" && !leadItem) || leadItem
-            ? "100vh"
-            : "auto",
+              ? "100vh"
+              : "auto",
           overflow: { md: "hidden" },
           py: { xs: 3, md: 4 },
           pb: { xs: 16, md: 10 },
@@ -214,8 +213,8 @@ export default function TempRegisterPage({ leadId }) {
             height: !leadCategory
               ? "auto"
               : (leadCategory !== "DESIGN" && !leadItem) || leadItem
-              ? "100vh"
-              : "auto",
+                ? "100vh"
+                : "auto",
             // overflow: { md: "hidden" },
             height: "fit-content",
             py: { xs: 3, md: 4 },

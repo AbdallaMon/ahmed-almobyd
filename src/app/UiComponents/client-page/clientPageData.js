@@ -20,15 +20,15 @@ export const designLead = [
   {
     value: "CONSTRUCTION_VILLA",
   },
-  {
-    value: "UNDER_CONSTRUCTION_VILLA",
-  },
-  {
-    value: "PART_OF_HOME",
-  },
-  {
-    value: "COMMERCIAL",
-  },
+  // {
+  //   value: "UNDER_CONSTRUCTION_VILLA",
+  // },
+  // {
+  //   value: "PART_OF_HOME",
+  // },
+  // {
+  //   value: "COMMERCIAL",
+  // },
 ];
 export const leads = [
   {

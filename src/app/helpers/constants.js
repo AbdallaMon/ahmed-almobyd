@@ -51,7 +51,8 @@ export const LeadType = {
   PLAN: "Plan",
   CITY_VISIT: "City Visit",
   APARTMENT: "Apartment",
-  CONSTRUCTION_VILLA: "Construction Villa",
+  CONSTRUCTION_VILLA: "Villa",
+  VILLA: "Villa",
   UNDER_CONSTRUCTION_VILLA: "Villa Under Construction",
   PART_OF_HOME: "Part of Home",
   COMMERCIAL: "Commercial",
@@ -68,7 +69,7 @@ export const dictionary = {
   Plan: "مخطط",
   "City Visit": "زيارة ميدانية",
   Apartment: "شقة",
-  "Construction Villa": "فيلا مسكونة",
+  "Construction Villa": "فيلا",
   "Villa Under Construction": "فيلا تحت الإنشاء",
   "Part of Home": "جزء من المنزل",
   Commercial: "تجاري",
@@ -88,6 +89,7 @@ export const dictionary = {
   "Ras Al Khaimah": "رأس الخيمة",
   Fujairah: "الفجيرة",
   "Khor Fakkan": "خورفكان",
+  Villa: "فيلا",
   // Price Ranges
 
   //   "400,000 AED or less": "أقل من  400,000 درهم اماراتي",

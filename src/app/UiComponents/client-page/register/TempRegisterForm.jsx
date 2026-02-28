@@ -28,7 +28,6 @@ import {
   LeadType,
 } from "@/app/helpers/constants.js";
 import SimpleFileInput from "@/app/UiComponents/formComponents/SimpleFileInput.jsx";
-import { priceRange } from "@/app/UiComponents/client-page/clientPageData.js";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import "dayjs/locale/en-gb";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
@@ -36,7 +35,6 @@ import gsap from "gsap";
 import { useUploadContext } from "@/app/providers/UploadingProgressProvider";
 import { uploadInChunks } from "@/app/helpers/functions/uploadAsChunk";
 import { CountrySelector } from "../FinalSelectionForm";
-import { ConsultLevels } from "../consult-levels/ConsultLevels";
 import { matchIsValidTel, MuiTelInput } from "mui-tel-input";
 import { toast } from "react-toastify";
 import {
@@ -65,16 +63,16 @@ async function submitInitialRequest(data, setLoading, lng) {
         Success(
           lng === "ar"
             ? "تم تسجيل البيانات الاولية من فضلك انتظر"
-            : "Initial data registered. Please wait."
-        )
+            : "Initial data registered. Please wait.",
+        ),
       );
     } else {
       toast.update(
         id,
         Failed(
           response.message ||
-            (lng === "ar" ? "حدثت مشكلة" : "Something went wrong")
-        )
+            (lng === "ar" ? "حدثت مشكلة" : "Something went wrong"),
+        ),
       );
     }
     return response;
@@ -82,8 +80,8 @@ async function submitInitialRequest(data, setLoading, lng) {
     toast.update(
       id,
       Failed(
-        err.message || (lng === "ar" ? "حدثت مشكلة" : "Something went wrong")
-      )
+        err.message || (lng === "ar" ? "حدثت مشكلة" : "Something went wrong"),
+      ),
     );
     return { status: 500, message: "Error, " + err.message };
   } finally {
@@ -104,8 +102,7 @@ function DesignLeadForm({ category, item, location }) {
     phone: "",
     emirate: null,
     email: "",
-    priceRange: [0, 0],
-    priceOption: null,
+
     file: null,
     clientDescription: null,
     country: null,
@@ -135,13 +132,7 @@ function DesignLeadForm({ category, item, location }) {
   const handleEmirateChange = (event, newValue) => {
     setFormData((prev) => ({ ...prev, emirate: event.target.value }));
   };
-  const handlePriceChange = (index, value) => {
-    setFormData((prev) => {
-      const newPriceRange = [...prev.priceRange];
-      newPriceRange[index] = Number(value) || 0;
-      return { ...prev, priceRange: newPriceRange };
-    });
-  };
+
   const handleSelectPriceChange = (e) => {
     setFormData((prev) => ({ ...prev, priceOption: e.target.value }));
   };
@@ -165,21 +156,12 @@ function DesignLeadForm({ category, item, location }) {
   }, []);
   const handleSubmit = async () => {
     if (loading) return;
-    const { name, phone, email, priceRange, emirate, priceOption } = formData;
+    const { name, phone, email, emirate } = formData;
     if (!matchIsValidTel(phone)) {
       setAlertError(translate("Invalid phone"));
       return;
     }
-    if (
-      !name ||
-      !phone ||
-      !email ||
-      (!emirate && location === "INSIDE_UAE") ||
-      (location === "INSIDE_UAE" &&
-        priceRange[0] === 0 &&
-        priceRange[1] === 0 &&
-        !priceOption)
-    ) {
+    if (!name || !phone || !email || (!emirate && location === "INSIDE_UAE")) {
       setAlertError(translate("Please fill all the fields."));
       return;
     }
@@ -187,13 +169,7 @@ function DesignLeadForm({ category, item, location }) {
       setAlertError(translate("Please fill all the fields."));
       return;
     }
-    if (
-      (!emirate && location === "INSIDE_UAE") ||
-      (location === "INSIDE_UAE" &&
-        priceRange[0] === 0 &&
-        priceRange[1] === 0 &&
-        !priceOption)
-    ) {
+    if (!emirate && location === "INSIDE_UAE") {
       setAlertError(translate("Please fill all the fields."));
       return;
     }
@@ -208,7 +184,7 @@ function DesignLeadForm({ category, item, location }) {
     const initialRequest = await submitInitialRequest(
       formData,
       setLoading,
-      lng
+      lng,
     );
     if (initialRequest.status !== 200) {
       return;
@@ -219,7 +195,7 @@ function DesignLeadForm({ category, item, location }) {
         formData.file,
         setProgress,
         setOverlay,
-        true
+        true,
       );
 
       if (fileUpload.status === 200) {
@@ -236,7 +212,7 @@ function DesignLeadForm({ category, item, location }) {
           setLoading,
           `client/new-lead/complete-register/${leadId}`,
           false,
-          translate("Submitting")
+          translate("Submitting"),
         );
         if (request.status === 200) {
           setRenderSuccess(true);
@@ -250,7 +226,7 @@ function DesignLeadForm({ category, item, location }) {
         setLoading,
         `client/new-lead/complete-register/${leadId}`,
         false,
-        translate("Submitting")
+        translate("Submitting"),
       );
       if (request.status === 200) {
         setRenderSuccess(true);
@@ -300,7 +276,7 @@ function DesignLeadForm({ category, item, location }) {
               }}
             >
               {translate(
-                "You're just one step away from starting your project!"
+                "You're just one step away from starting your project!",
               )}
             </Typography>
             <Box
@@ -406,78 +382,6 @@ function DesignLeadForm({ category, item, location }) {
                     </Select>
                   </FormControl>
 
-                  {priceRange[item].type === "input" ? (
-                    <Box sx={{ mb: 1 }}>
-                      <Typography
-                        variant="subtitle1"
-                        gutterBottom
-                        sx={{ mb: 2.5, mt: -1 }}
-                      >
-                        {translate(
-                          "How much would you like to invest in your dream home?"
-                        )}
-                      </Typography>
-                      <Stack
-                        direction="row"
-                        spacing={2}
-                        alignItems="center"
-                        sx={{ mt: -1.5 }}
-                      >
-                        <TextField
-                          type="number"
-                          label={translate("Min")}
-                          value={formData.priceRange[0]}
-                          onChange={(e) => handlePriceChange(0, e.target.value)}
-                          sx={{ flex: 1 }}
-                          InputProps={{
-                            sx: { borderRadius: 2 },
-                          }}
-                        />
-                        <TextField
-                          type="number"
-                          label={translate("Max")}
-                          value={formData.priceRange[1]}
-                          onChange={(e) => handlePriceChange(1, e.target.value)}
-                          sx={{ flex: 1 }}
-                          InputProps={{
-                            sx: { borderRadius: 2 },
-                          }}
-                        />
-                      </Stack>
-                    </Box>
-                  ) : (
-                    <>
-                      <Typography
-                        variant="subtitle1"
-                        sx={{
-                          marginTop: "8px !important",
-                          mb: "-15px !important",
-                        }}
-                      >
-                        {translate(
-                          "How much would you like to invest in your dream home?"
-                        )}
-                      </Typography>
-                      <FormControl fullWidth variant="outlined">
-                        <InputLabel id="price-range-label">
-                          {translate("Budget")}
-                        </InputLabel>
-                        <Select
-                          labelId="price-range-label"
-                          id="price-range-select"
-                          label={translate("Budget")}
-                          value={formData.priceOption} // Ensure you define this state
-                          onChange={handleSelectPriceChange}
-                        >
-                          {priceRange[item].options.map((price) => (
-                            <MenuItem value={price} key={price}>
-                              {translate(price)}
-                            </MenuItem>
-                          ))}
-                        </Select>
-                      </FormControl>
-                    </>
-                  )}
                   <TextField
                     fullWidth
                     label={translate("Additional information (optional)")}
@@ -614,7 +518,7 @@ function SuccessPage({ lng, category, formData }) {
       <Alert severity="success">
         <Typography variant="body1" p={4} fontSize="1.2rem">
           {translate(
-            "Thank you for your submission. We will contact you soon."
+            "Thank you for your submission. We will contact you soon.",
           )}
         </Typography>
       </Alert>
