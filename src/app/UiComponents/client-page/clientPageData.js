@@ -30,6 +30,10 @@ export const designLead = [
   //   value: "COMMERCIAL",
   // },
 ];
+export const DesignLeadPrice = {
+  APARTMENT: "Design fees start from 15,000 AED",
+  CONSTRUCTION_VILLA: "Design fees start from 60,000 AED",
+};
 export const leads = [
   {
     title: "Consultation",

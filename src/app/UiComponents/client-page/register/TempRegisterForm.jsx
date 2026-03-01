@@ -41,6 +41,7 @@ import {
   Failed,
   Success,
 } from "@/app/UiComponents/feedback/loaders/toast/ToastUpdate";
+import { DesignLeadPrice } from "../clientPageData";
 
 async function submitInitialRequest(data, setLoading, lng) {
   const toastMessage = lng === "ar" ? "جاري الإرسال..." : "Submitting...";
@@ -102,7 +103,6 @@ function DesignLeadForm({ category, item, location }) {
     phone: "",
     emirate: null,
     email: "",
-
     file: null,
     clientDescription: null,
     country: null,
@@ -133,9 +133,6 @@ function DesignLeadForm({ category, item, location }) {
     setFormData((prev) => ({ ...prev, emirate: event.target.value }));
   };
 
-  const handleSelectPriceChange = (e) => {
-    setFormData((prev) => ({ ...prev, priceOption: e.target.value }));
-  };
   async function getDefaultCountryCode() {
     const defaultCountry = "AE";
     if (location === "INSIDE_UAE") {
@@ -267,12 +264,15 @@ function DesignLeadForm({ category, item, location }) {
             }}
           >
             <Typography
-              variant="h4"
+              variant="h5"
+              component="h4"
               sx={{
                 marginBottom: 1,
                 textAlign: "center",
                 fontWeight: 700,
                 color: theme.palette.primary.main,
+                maxWidth: { xs: "280px", md: "600px" },
+                margin: "0 auto 16px auto",
               }}
             >
               {translate(
@@ -460,6 +460,17 @@ function DesignLeadForm({ category, item, location }) {
                 variant="outlined"
               />
 
+              <Box>
+                <Typography
+                  variant="subtitle2"
+                  sx={{
+                    fontWeight: 600,
+                    textAlign: "center",
+                  }}
+                >
+                  {translate(DesignLeadPrice[item]) || ""}
+                </Typography>
+              </Box>
               <Button
                 variant="contained"
                 onClick={handleSubmit}

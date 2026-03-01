@@ -58,6 +58,7 @@ export const LeadType = {
   COMMERCIAL: "Commercial",
   NONE: "None",
 };
+
 export const dictionary = {
   Consultation: "استشارة",
   Design: "تصميم",
@@ -73,6 +74,10 @@ export const dictionary = {
   "Villa Under Construction": "فيلا تحت الإنشاء",
   "Part of Home": "جزء من المنزل",
   Commercial: "تجاري",
+  "Design fees start from 15,000 AED":
+    "رسوم التصميم تبدأ من 15,000 درهم إماراتي",
+  "Design fees start from 60,000 AED":
+    "رسوم التصميم تبدأ من 60,000 درهم إماراتي",
   "39 dollars – fully deducted upon contracting.":
     "٣٩ دولار تُخصم بالكامل عند التعاقد",
   "Book Now 39 DOLLAR": "احجز الان ٣٩ دولار",
