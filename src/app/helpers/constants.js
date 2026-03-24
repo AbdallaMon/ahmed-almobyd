@@ -630,3 +630,69 @@ export const LEAD_SOURCE_LABELS = {
   },
   OTHER: { en: "Other", ar: "أخرى" },
 };
+
+export const BOOKING_FORM = {
+  name: {
+    label: {
+      ar: "الاسم",
+      en: "Name",
+    },
+    id: "name",
+  },
+  phone: {
+    label: {
+      ar: "رقم الهاتف",
+      en: "Phone number",
+    },
+  },
+  email: {
+    label: {
+      ar: "البريد الالكتروني",
+      en: "Email",
+    },
+    id: "email",
+  },
+  statusOfTheProject: {
+    label: {
+      ar: "حالة المشروع",
+      en: "Status of the project",
+    },
+    id: "stateOfTheProject",
+    options: [
+      {
+        ar: "صب أعمدة",
+        en: "Column Casting",
+        value: "column_casting",
+      },
+      {
+        ar: "حفر الارض",
+        en: "Ground Excavation",
+        value: "ground_excavation",
+      },
+      {
+        ar: "مخططات",
+        en: "Plans",
+        value: "plans",
+      },
+      {
+        ar: "انتهيت من تقطيع البلوك",
+        en: "Finished Cutting the Blocks",
+        value: "finished_cutting_blocks",
+      },
+    ],
+  },
+  location: {
+    label: {
+      ar: "الموقع",
+      en: "Location",
+    },
+    id: "emirate",
+    options: Object.keys(Emirate).map((em) => {
+      return {
+        ar: dictionary[Emirate[em]],
+        en: Emirate[em],
+        value: em,
+      };
+    }),
+  },
+};
