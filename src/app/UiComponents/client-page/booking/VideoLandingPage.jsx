@@ -13,7 +13,8 @@ export default function VideoLandingPage({}) {
   return (
     <Box
       sx={{
-        height: "100vh",
+        // height: "100vh",// consider the bar of browser
+        height: "100dvh",
         width: "100%",
         overflow: "hidden",
         bgcolor: theme.palette.background.default,
@@ -35,6 +36,7 @@ export default function VideoLandingPage({}) {
             flexDirection: "column",
             pb: 2,
             px: { xs: 2, sm: 3 },
+            gap: 2,
           }}
         >
           <LandingHeader />
@@ -61,7 +63,7 @@ export default function VideoLandingPage({}) {
             >
               <Box
                 component="iframe"
-                src="https://www.youtube.com/embed/dQw4w9WgXcQ"
+                src="https://www.youtube.com/embed/vhIdEs8GPJ0?si=Wd28HsfMa3VW3UQh"
                 title="YouTube video"
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                 allowFullScreen
@@ -73,24 +75,25 @@ export default function VideoLandingPage({}) {
                 }}
               />
             </Box>
-
-            <Button
-              variant="contained"
-              fullWidth
-              component="a"
-              href="/booking"
-              sx={{
-                height: { xs: 56, sm: 60 },
-                borderRadius: 999,
-                fontSize: { xs: "1rem", sm: "1.1rem" },
-                fontWeight: 700,
-                boxShadow: theme.shadows[4],
-                textTransform: "none",
-              }}
-            >
-              {isArabic ? "سجل الآن" : "Register Now"}
-            </Button>
           </Box>
+          <Button
+            variant="contained"
+            fullWidth
+            component="a"
+            href="/booking"
+            sx={{
+              height: { xs: 56, sm: 60 },
+              maxHeight: { xs: 56, sm: 60 },
+              borderRadius: 999,
+              fontSize: { xs: "1rem", sm: "1.1rem" },
+              fontWeight: 700,
+              boxShadow: theme.shadows[4],
+              textTransform: "none",
+              flex: 1,
+            }}
+          >
+            {isArabic ? "سجل الآن" : "Register Now"}
+          </Button>
         </Container>
       </Box>
     </Box>
