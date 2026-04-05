@@ -1,19 +1,12 @@
 import "./globals.css";
-import ToastProvider from "@/app/providers/ToastLoadingProvider";
-import AuthProvider from "@/app/providers/AuthProvider";
-import MUIContextProvider from "@/app/providers/MUIContext";
-import DotsLoader from "@/app/UiComponents/feedback/loaders/DotsLoading";
-import MuiAlertProvider from "@/app/providers/MuiAlert.jsx";
-import colors from "@/app/helpers/colors.js";
-import { Noto_Kufi_Arabic } from "next/font/google";
-import UploadingProvider from "./providers/UploadingProgressProvider";
+import ToastProvider from "@/app/v2/providers/ToastLoadingProvider";
+import AuthProvider from "@/app/v2/providers/AuthProvider";
+import MUIContextProvider from "@/app/v2/providers/MUIContext";
+import DotsLoader from "@/app/v2/shared/components/DotsLoader";
+import MuiAlertProvider from "@/app/v2/providers/MuiAlert";
+import UploadingProvider from "@/app/v2/providers/UploadingProgressProvider";
+import LanguageProvider from "./v2/providers/LanguageProvider";
 
-const noto = Noto_Kufi_Arabic({
-  weight: ["400", "500", "700"],
-  style: ["normal"],
-  subsets: ["arabic"],
-  display: "swap",
-});
 export const metadata = {
   title: "المهندس أحمد المبيض | حجز استشارة تصميم داخلي",
   description: `احجز استشارتك الآن مع المهندس أحمد المبيض، المتخصص في التصميم الداخلي الفاخر. اكتشف كيف يمكنه تحويل مساحتك إلى مكان يجمع بين الأناقة، الراحة، والوظيفية. استشارات مخصصة للمجالس، المداخل، غرف المعيشة، والفلل الفاخرة.`,
@@ -49,10 +42,8 @@ export default function RootLayout({ children }) {
       <head>
         <link rel="icon" href="/favicon.ico" />
       </head>
-      <body
-        className={noto.className}
-        style={{ backgroundColor: colors.bgSecondary }}
-      >
+
+      <LanguageProvider>
         <MuiAlertProvider>
           <MUIContextProvider>
             <UploadingProvider>
@@ -65,7 +56,7 @@ export default function RootLayout({ children }) {
             </UploadingProvider>
           </MUIContextProvider>
         </MuiAlertProvider>
-      </body>
+      </LanguageProvider>
     </html>
   );
 }

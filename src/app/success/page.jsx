@@ -1,5 +1,5 @@
 import { Suspense } from "react";
-import SuccessPage from "./SuccessPage";
+import SuccessPage from "@/app/v2/modules/success/SuccessPage";
 
 export const metadata = {
   title: "Payment Successful - Dream Studio",

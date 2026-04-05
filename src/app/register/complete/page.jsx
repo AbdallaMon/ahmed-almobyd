@@ -1,13 +1,11 @@
-import LanguageProvider from "@/app/providers/LanguageProvider";
-import CompleteRegister from "@/app/UiComponents/client-page/register/CompleteRegister";
+import CompleteRegisterPage from "@/app/v2/modules/complete-register/CompleteRegisterPage";
 import { Suspense } from "react";
 
 export default function page({ searchParams }) {
+  const { leadId } = searchParams;
   return (
-    <LanguageProvider>
-      <Suspense>
-        <CompleteRegister leadId={searchParams.leadId} />
-      </Suspense>
-    </LanguageProvider>
+    <Suspense>
+      <CompleteRegisterPage leadId={leadId} />
+    </Suspense>
   );
 }

@@ -1,13 +1,10 @@
 import { Suspense } from "react";
-import LanguageProvider from "../providers/LanguageProvider";
-import BookingForm from "../UiComponents/client-page/booking/BookingForm";
+import BookingLayout from "../v2/modules/booking/BookingLayout";
 
 export default function BookingPage() {
   return (
-    <LanguageProvider>
-      <Suspense>
-        <BookingForm />
-      </Suspense>
-    </LanguageProvider>
+    <Suspense>
+      <BookingLayout />
+    </Suspense>
   );
 }

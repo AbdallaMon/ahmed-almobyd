@@ -1,5 +1,5 @@
-import colors from "@/app/helpers/colors";
-import { CheckoutPage } from "@/app/UiComponents/client-page/register/CheckoutPage";
+import colors from "@/app/v2/theme/colors";
+import { CheckoutPage } from "@/app/v2/modules/checkout/CheckoutPage";
 import { Button, Container, Paper } from "@mui/material";
 import { MdArrowBack } from "react-icons/md";
 

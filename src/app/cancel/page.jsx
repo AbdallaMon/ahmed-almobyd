@@ -1,5 +1,5 @@
 import { Suspense } from "react";
-import CancelPage from "./CancelPage";
+import CancelPage from "@/app/v2/modules/cancel/CancelPage";
 
 export const metadata = {
   title: "Payment Unsuccessful - Dream Studio",

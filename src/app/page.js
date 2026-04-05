@@ -1,6 +1,6 @@
 "use client";
 import { useEffect } from "react";
-import DotsLoader from "./UiComponents/feedback/loaders/DotsLoading";
+import DotsLoader from "@/app/v2/shared/components/DotsLoader";
 
 export default function Page() {
   useEffect(() => {

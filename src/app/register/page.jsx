@@ -1,6 +1,6 @@
-import LanguageProvider from "@/app/providers/LanguageProvider.jsx";
 import { Suspense } from "react";
-import TempRegisterPage from "../UiComponents/client-page/register/TempRegisterPage";
+import RegisterPage from "@/app/v2/modules/register/RegisterPage";
+
 export const metadata = {
   title:
     "Book an Interior Design Consultation with Eng. احمد المبيض - Dream Studio",
@@ -19,14 +19,11 @@ export const metadata = {
     type: "website",
   },
 };
+
 export default function page() {
   return (
-    <LanguageProvider>
-      <Suspense>
-        {/* <RegisterPage /> */}
-        {/* <NewRegisterForm /> */}
-        <TempRegisterPage />
-      </Suspense>
-    </LanguageProvider>
+    <Suspense>
+      <RegisterPage />
+    </Suspense>
   );
 }
