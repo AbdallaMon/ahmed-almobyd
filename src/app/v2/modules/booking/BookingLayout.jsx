@@ -38,7 +38,7 @@ export default function BookingLayout({ children }) {
         >
           <LandingHeader />
           <VideoLandingPage showForm={showForm} />
-          <Steps showForm={showForm} />
+          {showForm && <Steps showForm={showForm} />}
         </Container>
       </Box>
     </Box>
