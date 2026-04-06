@@ -1,6 +1,13 @@
 "use client";
 
-import { Box, LinearProgress, Typography } from "@mui/material";
+import {
+  Alert,
+  Box,
+  Button,
+  LinearProgress,
+  Paper,
+  Typography,
+} from "@mui/material";
 import { StepItemContainer } from "./StepItemContainer";
 import { StepForm } from "./StepForm";
 import { useLanguageContext } from "@/app/v2/providers/LanguageProvider";
@@ -11,12 +18,48 @@ export function StepLayout({
   onNext,
   isSubmitting,
   error,
+  infoMessage,
   formData,
+  serverFieldErrors,
   totalSteps,
   currentStepIndex,
+  isSubmitted,
+  submitMessage,
+  onResetBooking,
+  canJumpToLastSubmittedStep,
+  lastSubmittedStepIndex,
+  onJumpToLastSubmittedStep,
 }) {
   const { translate } = useLanguageContext();
   const progress = ((currentStepIndex + 1) / totalSteps) * 100;
+
+  if (isSubmitted) {
+    return (
+      <Paper
+        elevation={4}
+        sx={{
+          p: { xs: 2, md: 3 },
+          borderRadius: 3,
+          backgroundColor: "#fff",
+          textAlign: "center",
+        }}
+      >
+        {infoMessage && (
+          <Alert severity="info" sx={{ mb: 2, textAlign: "start" }}>
+            {infoMessage}
+          </Alert>
+        )}
+
+        <Alert severity="success" sx={{ mb: 2, textAlign: "start" }}>
+          {submitMessage || translate("status.thankYou")}
+        </Alert>
+
+        <Button variant="contained" onClick={onResetBooking}>
+          {translate("button.resetBooking")}
+        </Button>
+      </Paper>
+    );
+  }
 
   return (
     <Box sx={{ pb: 10 }}>
@@ -54,7 +97,7 @@ export function StepLayout({
       <Typography
         variant="h6"
         sx={{
-          mb: 3,
+          mb: 1,
           fontWeight: 700,
           color: colors.heading,
           textAlign: "center",
@@ -62,6 +105,26 @@ export function StepLayout({
       >
         {translate(step.key)}
       </Typography>
+
+      {canJumpToLastSubmittedStep && (
+        <Box sx={{ textAlign: "center", mb: 2 }}>
+          <Button
+            variant="text"
+            onClick={onJumpToLastSubmittedStep}
+            sx={{
+              textTransform: "none",
+              color: colors.primary,
+              fontWeight: 600,
+              fontSize: "0.875rem",
+              textDecoration: "underline",
+              textUnderlineOffset: 3,
+              "&:hover": { textDecoration: "underline", opacity: 0.8 },
+            }}
+          >
+            {translate("button.goToLastStep")} {lastSubmittedStepIndex + 1}
+          </Button>
+        </Box>
+      )}
 
       {/* Error message */}
       {error && (
@@ -72,6 +135,12 @@ export function StepLayout({
         >
           {error}
         </Typography>
+      )}
+
+      {infoMessage && (
+        <Alert severity="info" sx={{ mb: 2 }}>
+          {infoMessage}
+        </Alert>
       )}
 
       {/* Content */}
@@ -88,6 +157,7 @@ export function StepLayout({
           onNext={onNext}
           isSubmitting={isSubmitting}
           formData={formData}
+          serverFieldErrors={serverFieldErrors}
         />
       )}
     </Box>

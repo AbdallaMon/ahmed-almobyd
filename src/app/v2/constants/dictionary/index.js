@@ -18,7 +18,8 @@ import { cancel } from "./cancel";
 import { success } from "./success";
 import { source } from "./source";
 import { consultLevels } from "./consultLevels";
-import { bookingSteps } from "./bookingSteps";
+import { bookingSteps } from "./booking/bookingSteps";
+import { identity } from "./identity";
 
 export const dictionary = {
   ...category,
@@ -36,4 +37,5 @@ export const dictionary = {
   ...source,
   ...consultLevels,
   ...bookingSteps,
+  ...identity,
 };

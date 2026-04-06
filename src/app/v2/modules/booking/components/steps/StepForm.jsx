@@ -1,14 +1,28 @@
 "use client";
 
 import { useEffect } from "react";
-import { Box, Button, CircularProgress, Stack, TextField } from "@mui/material";
+import {
+  Box,
+  Button,
+  Checkbox,
+  CircularProgress,
+  FormControlLabel,
+  Stack,
+  TextField,
+} from "@mui/material";
 import { useForm, Controller } from "react-hook-form";
 import { MuiTelInput, matchIsValidTel } from "mui-tel-input";
 import { useLanguageContext } from "@/app/v2/providers/LanguageProvider";
 import { useGeoCountry } from "@/app/v2/shared/hooks/useGeoCountry";
 import colors from "@/app/v2/theme/colors";
 
-export function StepForm({ step, onNext, isSubmitting, formData }) {
+export function StepForm({
+  step,
+  onNext,
+  isSubmitting,
+  formData,
+  serverFieldErrors = {},
+}) {
   const { translate } = useLanguageContext();
   const { defaultCountry } = useGeoCountry("INSIDE_UAE");
 
@@ -23,6 +37,9 @@ export function StepForm({ step, onNext, isSubmitting, formData }) {
       name: formData?.name || "",
       phone: formData?.phone || "",
       email: formData?.email || "",
+      contactAgreement: formData?.contactAgreement || false,
+      contactInitialPriceAgreement:
+        formData?.contactInitialPriceAgreement || false,
     },
   });
 
@@ -31,6 +48,9 @@ export function StepForm({ step, onNext, isSubmitting, formData }) {
       name: formData?.name || "",
       phone: formData?.phone || "",
       email: formData?.email || "",
+      contactAgreement: formData?.contactAgreement || false,
+      contactInitialPriceAgreement:
+        formData?.contactInitialPriceAgreement || false,
     });
   }, [formData, reset]);
 
@@ -68,10 +88,61 @@ export function StepForm({ step, onNext, isSubmitting, formData }) {
                     defaultCountry={defaultCountry || "AE"}
                     label={translate(field.key)}
                     fullWidth
-                    error={!!errors[field.id]}
-                    helperText={errors[field.id]?.message}
+                    error={!!errors[field.id] || !!serverFieldErrors[field.id]}
+                    helperText={
+                      errors[field.id]?.message || serverFieldErrors[field.id]
+                    }
                     sx={{ "& .MuiInputBase-root": { borderRadius: 2 } }}
                   />
+                )}
+              />
+            );
+          }
+          if (field.inputType === "checkbox") {
+            return (
+              // render error state by showing helper text below the checkbox
+              <Controller
+                key={field.id}
+                name={field.id}
+                control={control}
+                defaultValue={false}
+                rules={{
+                  required: translate(field.errorKey),
+                }}
+                render={({ field: ctrl }) => (
+                  <>
+                    <FormControlLabel
+                      control={<Checkbox {...ctrl} checked={ctrl.value} />}
+                      label={translate(field.key)}
+                      sx={{
+                        mt: "8px !important",
+                      }}
+                    />
+                    {errors[field.id] && (
+                      <Box
+                        sx={{
+                          color: colors.error,
+                          fontSize: "0.75rem",
+                          ml: 1.5,
+                          mt: "4px !important",
+                        }}
+                      >
+                        {errors[field.id]?.message}
+                      </Box>
+                    )}
+                    {!errors[field.id] && serverFieldErrors[field.id] && (
+                      <Box
+                        sx={{
+                          color: colors.error,
+                          fontSize: "0.75rem",
+                          ml: 1.5,
+                          mt: "4px !important",
+                        }}
+                      >
+                        {serverFieldErrors[field.id]}
+                      </Box>
+                    )}
+                  </>
                 )}
               />
             );
@@ -83,8 +154,10 @@ export function StepForm({ step, onNext, isSubmitting, formData }) {
               label={translate(field.key)}
               fullWidth
               type={field.inputType}
-              error={!!errors[field.id]}
-              helperText={errors[field.id]?.message}
+              error={!!errors[field.id] || !!serverFieldErrors[field.id]}
+              helperText={
+                errors[field.id]?.message || serverFieldErrors[field.id]
+              }
               InputProps={{ sx: { borderRadius: 2 } }}
               {...register(field.id, {
                 required: translate(field.errorKey),

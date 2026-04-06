@@ -10,17 +10,16 @@ import { Steps } from "./components/steps/Steps";
 
 export default function BookingLayout({ children }) {
   const theme = useTheme();
-  const { lng, translate } = useLanguageContext();
-  // const [showForm, setShowForm] = useState(false);
   const searchParams = useSearchParams();
   const showForm = searchParams.get("booking") === "true";
   return (
     <Box
       sx={{
-        height: "100dvh",
+        height: showForm ? "auto" : "100dvh",
         width: "100%",
         overflow: "hidden",
         bgcolor: theme.palette.background.default,
+        minHeight: "100dvh",
       }}
     >
       <Box sx={{ height: "100%", display: "flex", flexDirection: "column" }}>

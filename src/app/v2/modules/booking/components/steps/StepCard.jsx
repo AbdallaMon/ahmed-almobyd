@@ -27,6 +27,11 @@ export function StepCard({ step, onSelect, isActive, isDisabled = false }) {
           : "0px 3px 10px rgba(0,0,0,0.22)",
         transition: "border-color 0.24s, box-shadow 0.24s",
         transformOrigin: "center center",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        p: 2,
+        textAlign: "center",
       }}
     >
       {/* Image */}
@@ -48,9 +53,12 @@ export function StepCard({ step, onSelect, isActive, isDisabled = false }) {
         sx={{
           position: "absolute",
           inset: 0,
-          background:
-            "linear-gradient(to top, rgba(0,0,0,0.65) 0%, rgba(0,0,0,0.1) 55%, transparent 100%)",
+
           zIndex: 1,
+        }}
+        style={{
+          background:
+            "linear-gradient(to top, rgba(0,0,0,0.65) 0%, rgba(0,0,0,0.40) 55%, transparent 100%)",
         }}
       />
 
@@ -84,15 +92,15 @@ export function StepCard({ step, onSelect, isActive, isDisabled = false }) {
       <Typography
         variant="body2"
         sx={{
-          position: "absolute",
-          bottom: 10,
+          // position: "absolute",
           left: 10,
           right: 10,
           zIndex: 3,
-          color: "#fff",
+          // color: "#fff",
           fontWeight: 700,
           textAlign: "center",
           textShadow: "0 1px 4px rgba(0,0,0,0.6)",
+          color: "primary.contrastText",
         }}
       >
         {translate(step.key)}

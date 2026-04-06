@@ -2,13 +2,22 @@
 
 import { useState, useCallback, useEffect } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { toast } from "react-toastify";
 import { BOOKING_STEPS } from "../../../data";
-import { createLead, fireUpdateLead, submitFinalLead } from "../../../api";
+import { Success, Failed } from "@/app/v2/lib/toast";
+import { useLanguageContext } from "@/app/v2/providers/LanguageProvider";
+import { useToastContext } from "@/app/v2/providers/ToastLoadingProvider";
+import {
+  createLead,
+  fireUpdateLead,
+  getLead,
+  submitFinalLead,
+} from "../../../api";
 
 /**
  * Core multi-step booking logic.
  *
- * Step 1  — awaits `createLead` to get `leadId`, then advances.
+ * Step 1  — awaits `createLead(location)` to get `leadId`, then advances.
  * Steps 2-7 — fires `fireUpdateLead` (no await), advances immediately.
  * Step 8  — awaits `submitFinalLead` with all accumulated `formData`, then calls `onDone`.
  *
@@ -18,6 +27,8 @@ export function useSteps({ onDone }) {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
+  const { translate } = useLanguageContext();
+  const { setLoading } = useToastContext();
 
   const queryStep = Number(searchParams.get("step") || "1");
   const normalizedStep = Number.isFinite(queryStep)
@@ -30,16 +41,147 @@ export function useSteps({ onDone }) {
   const [leadId, setLeadId] = useState(queryLeadId);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState(null);
-
+  const [infoMessage, setInfoMessage] = useState(null);
+  const [serverFieldErrors, setServerFieldErrors] = useState({});
+  const [isHydratingLead, setIsHydratingLead] = useState(false);
+  const [submittedLead, setSubmittedLead] = useState(null);
+  const [submitMessage, setSubmitMessage] = useState(null);
   const currentStep = BOOKING_STEPS[currentStepIndex];
   const isFirstStep = currentStepIndex === 0;
   const isLastStep = currentStepIndex === BOOKING_STEPS.length - 1;
+  const isSubmitted = submittedLead?.status === "SUBMITTED";
+
+  const lastSubmittedStepIndex = Math.min(
+    BOOKING_STEPS.filter((step) => {
+      if (!step.field) return false;
+      const value = formData?.[step.field];
+      return value !== null && value !== undefined && value !== "";
+    }).length,
+    BOOKING_STEPS.length - 1,
+  );
+  const canJumpToLastSubmittedStep =
+    lastSubmittedStepIndex - currentStepIndex >= 2;
 
   useEffect(() => {
+    if (isSubmitted) return;
+
     if (currentStepIndex > 0 && !leadId) {
       setCurrentStepIndex(0);
     }
-  }, [currentStepIndex, leadId]);
+
+    const completedStepCount = BOOKING_STEPS.filter((step) => {
+      if (!step.field) return false;
+      const value = formData?.[step.field];
+      return value !== null && value !== undefined && value !== "";
+    }).length;
+
+    const normalizedIndex = Math.min(
+      completedStepCount,
+      BOOKING_STEPS.length - 1,
+    );
+
+    // Keep users from jumping ahead, but allow going back to previous steps.
+    if (currentStepIndex > normalizedIndex) {
+      setCurrentStepIndex(normalizedIndex);
+    }
+  }, [currentStepIndex, formData, isSubmitted, leadId]);
+
+  useEffect(() => {
+    const nextLeadId = searchParams.get("leadId");
+    if (!nextLeadId || isSubmitted) return;
+
+    if (nextLeadId !== String(leadId || "")) {
+      setLeadId(nextLeadId);
+    }
+  }, [isSubmitted, leadId, searchParams]);
+
+  useEffect(() => {
+    if (!leadId) return;
+
+    let mounted = true;
+
+    const hydrateLead = async () => {
+      setIsHydratingLead(true);
+      setError(null);
+
+      try {
+        const lead = await getLead(leadId);
+        if (!mounted) return;
+
+        if (lead?.status === "SUBMITTED") {
+          setSubmittedLead(lead);
+          setSubmitMessage(null);
+          setInfoMessage(translate("status.bookingAlreadySubmitted"));
+          setError(null);
+          setServerFieldErrors({});
+          return;
+        }
+
+        const nextFormData = {};
+        for (const step of BOOKING_STEPS) {
+          if (!step.field) continue;
+          const value = lead?.[step.field];
+          if (value !== null && value !== undefined && value !== "") {
+            nextFormData[step.field] = value;
+          }
+        }
+
+        const finalFields = [
+          "name",
+          "phone",
+          "email",
+          "contactAgreement",
+          "contactInitialPriceAgreement",
+        ];
+        for (const key of finalFields) {
+          const value = lead?.[key];
+          if (value !== null && value !== undefined && value !== "") {
+            nextFormData[key] = value;
+          }
+        }
+
+        setFormData(nextFormData);
+
+        const completedStepCount = BOOKING_STEPS.filter((step) => {
+          if (!step.field) return false;
+          const value = nextFormData[step.field];
+          return value !== null && value !== undefined && value !== "";
+        }).length;
+
+        const nextIndex = Math.min(
+          completedStepCount,
+          BOOKING_STEPS.length - 1,
+        );
+        setCurrentStepIndex(nextIndex);
+        setSubmittedLead(null);
+      } catch (err) {
+        if (mounted) {
+          const message = err?.message || "Failed to restore booking lead";
+          const isNotFound = /not found|404/i.test(message);
+
+          if (isNotFound) {
+            setLeadId(null);
+            setFormData({});
+            setCurrentStepIndex(0);
+            setSubmittedLead(null);
+            setError("Saved lead not found. Started a new booking.");
+          } else {
+            setError(message);
+          }
+        }
+      } finally {
+        if (mounted) {
+          setIsHydratingLead(false);
+        }
+      }
+    };
+
+    hydrateLead();
+
+    return () => {
+      mounted = false;
+    };
+  }, [leadId, onDone, translate]);
 
   useEffect(() => {
     const params = new URLSearchParams(searchParams.toString());
@@ -56,35 +198,79 @@ export function useSteps({ onDone }) {
     if (nextQuery !== searchParams.toString()) {
       router.replace(`${pathname}?${nextQuery}`, { scroll: false });
     }
-  }, [currentStepIndex, leadId, pathname, router, searchParams]);
+  }, [currentStepIndex, leadId, pathname, router, searchParams, isSubmitted]);
+
+  const parseServerFieldError = useCallback((message = "") => {
+    const supported = [
+      "name",
+      "phone",
+      "email",
+      "contactAgreement",
+      "contactInitialPriceAgreement",
+      "location",
+      "projectType",
+      "projectStage",
+      "previousWork",
+      "hasArchitecturalPlan",
+      "serviceType",
+      "decisionMaker",
+    ];
+
+    const normalized = String(message).toLowerCase();
+    const matched = supported.find((field) =>
+      normalized.includes(field.toLowerCase()),
+    );
+
+    if (!matched) return {};
+    return { [matched]: message };
+  }, []);
+
+  const resetBookingFlow = useCallback(() => {
+    setSubmittedLead(null);
+    setSubmitMessage(null);
+    setInfoMessage(null);
+    setServerFieldErrors({});
+    setError(null);
+    setFormData({});
+    setLeadId(null);
+    setCurrentStepIndex(0);
+    const params = new URLSearchParams(searchParams.toString());
+    params.set("booking", "true");
+    params.delete("step");
+    params.delete("leadId");
+    window.history.replaceState(null, "", `${pathname}?${params.toString()}`);
+    window.location.reload();
+  }, []);
 
   const onNext = useCallback(
     async (value) => {
-      setError(null);
+      if (isHydratingLead || isSubmitted) {
+        return false;
+      }
 
-      // ── Step 1: create deal (awaited) to get leadId,
-      //           then fire step-1 data as first update (same as all other steps) ──────
+      setError(null);
+      setInfoMessage(null);
+      setServerFieldErrors({});
+
       if (isFirstStep) {
         setIsSubmitting(true);
         try {
           let nextLeadId = leadId;
 
-          // Create lead if missing. If API is not ready, keep UI testable with local id.
           if (!nextLeadId) {
-            try {
-              const result = await createLead();
-              nextLeadId = result?.id;
-            } catch {
-              nextLeadId = `local-${Date.now()}`;
+            const result = await createLead(value);
+            nextLeadId = result?.id;
+            if (!nextLeadId) {
+              throw new Error("Lead id is missing from create response");
             }
           }
 
           setLeadId(String(nextLeadId));
 
-          // save step-1 selection + fire update (same pattern as steps 2-7)
+          // save step-1 selection; location is already persisted in createLead payload.
           const updated = { ...formData, [currentStep.field]: value };
           setFormData(updated);
-          fireUpdateLead(nextLeadId, { [currentStep.field]: value });
+
           setCurrentStepIndex((i) => i + 1);
           return true;
         } catch (err) {
@@ -100,15 +286,50 @@ export function useSteps({ onDone }) {
         // `value` is the full form object { name, phone, email }
         const allData = { ...formData, ...value };
         setIsSubmitting(true);
+        setLoading(true);
+        const toastId = toast.loading(translate("loading.submitting"));
+
         try {
-          await submitFinalLead(leadId, allData);
+          const response = await submitFinalLead(leadId, allData);
+          const lead = response?.lead;
+
+          if (lead?.status === "SUBMITTED") {
+            setSubmittedLead(lead);
+            setSubmitMessage(response?.message || null);
+            setInfoMessage(null);
+          }
+
+          toast.update(
+            toastId,
+            Success(response?.message || translate("status.success")),
+          );
+
           if (onDone) onDone();
           return true;
         } catch (err) {
-          setError(err.message);
+          const message = err?.message || "Failed to submit";
+          const status = err?.status;
+
+          if (status === 409) {
+            setInfoMessage(message);
+            if (err?.payload?.lead?.status === "SUBMITTED") {
+              setSubmittedLead(err.payload.lead);
+              setSubmitMessage(err.payload?.message || null);
+            }
+          } else if (status === 400) {
+            setError(message);
+            setServerFieldErrors(parseServerFieldError(message));
+          } else if (status === 404) {
+            setError(message);
+          } else {
+            setError(message);
+          }
+
+          toast.update(toastId, Failed(message));
           return false;
         } finally {
           setIsSubmitting(false);
+          setLoading(false);
         }
       }
 
@@ -125,14 +346,32 @@ export function useSteps({ onDone }) {
       setCurrentStepIndex((i) => i + 1);
       return true;
     },
-    [currentStep, formData, isFirstStep, isLastStep, leadId, onDone],
+    [
+      currentStep,
+      formData,
+      isFirstStep,
+      isHydratingLead,
+      isLastStep,
+      isSubmitted,
+      leadId,
+      onDone,
+      parseServerFieldError,
+      setLoading,
+      translate,
+    ],
   );
 
   const onBack = useCallback(() => {
+    if (isSubmitted) return;
+
     if (currentStepIndex > 0) {
       setCurrentStepIndex((i) => i - 1);
     }
-  }, [currentStepIndex]);
+  }, [currentStepIndex, isSubmitted]);
+
+  const onJumpToLastSubmittedStep = useCallback(() => {
+    setCurrentStepIndex(lastSubmittedStepIndex);
+  }, [lastSubmittedStepIndex]);
 
   return {
     currentStep,
@@ -140,8 +379,16 @@ export function useSteps({ onDone }) {
     totalSteps: BOOKING_STEPS.length,
     formData,
     leadId,
+    onJumpToLastSubmittedStep,
+    canJumpToLastSubmittedStep: !isSubmitted && canJumpToLastSubmittedStep,
+    lastSubmittedStepIndex,
     isSubmitting,
     error,
+    infoMessage,
+    serverFieldErrors,
+    isSubmitted,
+    submitMessage,
+    resetBookingFlow,
     onNext,
     onBack,
     isFirstStep,

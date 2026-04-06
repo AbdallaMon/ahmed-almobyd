@@ -48,7 +48,7 @@ export function LandingHeader({ sx }) {
             letterSpacing: 0.2,
           }}
         >
-          {translate("booking.bookFreeVisit")}
+          {translate("identity.name")}
         </Typography>
 
         <Select

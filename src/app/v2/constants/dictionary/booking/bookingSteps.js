@@ -121,4 +121,12 @@ export const bookingSteps = {
   "bookingStep8.name": { en: "Full Name", ar: "الاسم الكامل" },
   "bookingStep8.phone": { en: "Phone Number", ar: "رقم الجوال" },
   "bookingStep8.email": { en: "Email Address", ar: "البريد الإلكتروني" },
+  "bookingStep8.contactAgreement": {
+    en: "I agree to be contacted by Ahmed Almobyd for this inquiry",
+    ar: "ارغب من مهندس احمد تواصل معي",
+  },
+  "bookingStep8.contactInitialPriceAgreement": {
+    en: "Design prices start from 60k AED",
+    ar: "اسعار تصميم داحلي تبدأ من 60 الف درهم",
+  },
 };

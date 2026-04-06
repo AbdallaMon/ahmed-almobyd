@@ -1,42 +1,75 @@
 const BASE_URL = process.env.NEXT_PUBLIC_URL;
+const BOOKING_LEADS_BASE = "v2/client/booking-leads";
+
+class ApiError extends Error {
+  constructor(message, status, payload) {
+    super(message);
+    this.name = "ApiError";
+    this.status = status;
+    this.payload = payload;
+  }
+}
 
 async function request(path, method, body) {
-  return fetch(`${BASE_URL}/${path}`, {
+  const options = {
     method,
     headers: { "Content-Type": "application/json" },
     credentials: "include",
-    body: JSON.stringify(body),
-  });
+  };
+
+  if (body !== undefined) {
+    options.body = JSON.stringify(body);
+  }
+
+  return fetch(`${BASE_URL}/${path}`, options);
 }
 
 /**
- * Step 1 — creates an empty deal. Awaited; returns the new lead object (must include `id`).
- * Step-1's actual field value is sent immediately after via fireUpdateLead.
+ * Step 1 — creates a lead with the required location field.
  */
-export async function createLead() {
-  const res = await request("client/leads", "POST", {});
+export async function createLead(location) {
+  const res = await request(BOOKING_LEADS_BASE, "POST", { location });
   if (!res.ok) {
     const err = await res.json().catch(() => ({}));
-    throw new Error(err.message || "Failed to create lead");
+    throw new ApiError(err.message || "Failed to create lead", res.status, err);
   }
   return res.json();
 }
 
+export async function getLead(leadId) {
+  const res = await request(`${BOOKING_LEADS_BASE}/${leadId}`, "GET");
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new ApiError(err.message || "Failed to fetch lead", res.status, err);
+  }
+  return res.json();
+}
 /**
  * Steps 2-7 — fire-and-forget update. Never throws; errors are silently ignored.
  */
 export function fireUpdateLead(leadId, stepData) {
-  request(`client/leads/${leadId}`, "PATCH", stepData).catch(() => {});
+  request(`${BOOKING_LEADS_BASE}/${leadId}`, "PATCH", stepData).catch(() => {});
 }
 
 /**
  * Step 8 — final submit with all accumulated form data. Awaited.
  */
 export async function submitFinalLead(leadId, allData) {
-  const res = await request(`client/leads/${leadId}/submit`, "PUT", allData);
+  const res = await request(
+    `${BOOKING_LEADS_BASE}/${leadId}/submit`,
+    "PUT",
+    allData,
+  );
+
+  const payload = await res.json().catch(() => ({}));
+
   if (!res.ok) {
-    const err = await res.json().catch(() => ({}));
-    throw new Error(err.message || "Failed to submit");
+    throw new ApiError(
+      payload.message || "Failed to submit",
+      res.status,
+      payload,
+    );
   }
-  return res.json();
+
+  return payload;
 }

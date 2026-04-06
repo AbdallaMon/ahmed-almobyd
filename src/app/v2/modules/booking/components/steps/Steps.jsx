@@ -1,7 +1,7 @@
 "use client";
 
 import { Box, Fab } from "@mui/material";
-import { MdArrowBack, MdArrowForward } from "react-icons/md";
+import { MdArrowBack } from "react-icons/md";
 import { useSteps } from "./hooks/useSteps";
 import { StepLayout } from "./StepLayout";
 import { useLanguageContext } from "@/app/v2/providers/LanguageProvider";
@@ -18,8 +18,16 @@ export function Steps({ showForm = false, onDone }) {
     formData,
     isSubmitting,
     error,
+    infoMessage,
+    serverFieldErrors,
+    isSubmitted,
+    submitMessage,
+    resetBookingFlow,
     onNext,
     onBack,
+    onJumpToLastSubmittedStep,
+    canJumpToLastSubmittedStep,
+    lastSubmittedStepIndex,
     isFirstStep,
   } = useSteps({ onDone });
 
@@ -32,13 +40,21 @@ export function Steps({ showForm = false, onDone }) {
         onNext={onNext}
         isSubmitting={isSubmitting}
         error={error}
+        infoMessage={infoMessage}
         formData={formData}
+        serverFieldErrors={serverFieldErrors}
         totalSteps={totalSteps}
         currentStepIndex={currentStepIndex}
+        isSubmitted={isSubmitted}
+        submitMessage={submitMessage}
+        onResetBooking={resetBookingFlow}
+        canJumpToLastSubmittedStep={canJumpToLastSubmittedStep}
+        lastSubmittedStepIndex={lastSubmittedStepIndex}
+        onJumpToLastSubmittedStep={onJumpToLastSubmittedStep}
       />
 
       {/* Floating back button — hidden on step 1 */}
-      {!isFirstStep && (
+      {!isFirstStep && !isSubmitted && (
         <Fab
           onClick={onBack}
           disabled={isSubmitting}
@@ -56,7 +72,7 @@ export function Steps({ showForm = false, onDone }) {
             zIndex: 100,
           }}
         >
-          {isRtl ? <MdArrowForward size={20} /> : <MdArrowBack size={20} />}
+          <MdArrowBack size={20} />{" "}
         </Fab>
       )}
     </Box>

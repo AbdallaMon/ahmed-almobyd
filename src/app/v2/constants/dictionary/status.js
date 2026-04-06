@@ -6,6 +6,10 @@ export const status = {
     en: "Thank you for your submission. We will contact you soon.",
     ar: "شكرًا لك على تقديم طلبك. سنتواصل معك قريبًا.",
   },
+  "status.bookingAlreadySubmitted": {
+    en: "This booking lead has already been submitted.",
+    ar: "تم إرسال هذا الحجز مسبقًا.",
+  },
   "status.discount10": {
     en: "You got a 10% discount!",
     ar: "لقد حصلت على خصم 10٪",
