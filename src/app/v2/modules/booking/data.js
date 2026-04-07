@@ -1,5 +1,3 @@
-const FAKE_IMAGE_SRC = "/design.jfif";
-
 export const BOOKING = {
   landingIframeSrc:
     "https://www.youtube.com/embed/vhIdEs8GPJ0?si=Wd28HsfMa3VW3UQh",
@@ -19,32 +17,44 @@ export const BOOKING = {
           key: "bookingStep1.abuDhabi",
           value: "ABU_DHABI",
           type: "IMAGE",
-          image: { src: FAKE_IMAGE_SRC, altKey: "bookingStep1.abuDhabi" },
+          image: {
+            src: "/booking/abu-dhabi.jpg",
+            altKey: "bookingStep1.abuDhabi",
+          },
         },
         {
           key: "bookingStep1.abuDhabiAlAin",
           value: "ABU_DHABI_AL_AIN",
           type: "IMAGE",
-          image: { src: FAKE_IMAGE_SRC, altKey: "bookingStep1.abuDhabiAlAin" },
+          image: {
+            src: "/booking/abu-dhabi-al-ain.jpg",
+            altKey: "bookingStep1.abuDhabiAlAin",
+          },
         },
         {
           key: "bookingStep1.dubai",
           value: "DUBAI",
           type: "IMAGE",
-          image: { src: FAKE_IMAGE_SRC, altKey: "bookingStep1.dubai" },
+          image: {
+            src: "/booking/dubai.jpg",
+            altKey: "bookingStep1.dubai",
+          },
         },
         {
           key: "bookingStep1.sharjah",
           value: "SHARJAH",
           type: "IMAGE",
-          image: { src: FAKE_IMAGE_SRC, altKey: "bookingStep1.sharjah" },
+          image: {
+            src: "/booking/sharjah.jpg",
+            altKey: "bookingStep1.sharjah",
+          },
         },
         {
           key: "bookingStep1.sharjahKhorFakkan",
           value: "SHARJAH_KHOR_FAKKAN",
           type: "IMAGE",
           image: {
-            src: FAKE_IMAGE_SRC,
+            src: "/booking/sharjah-khor-fakkan.jpg",
             altKey: "bookingStep1.sharjahKhorFakkan",
           },
         },
@@ -52,31 +62,46 @@ export const BOOKING = {
           key: "bookingStep1.rasAlKhaimah",
           value: "RAS_AL_KHAIMAH",
           type: "IMAGE",
-          image: { src: FAKE_IMAGE_SRC, altKey: "bookingStep1.rasAlKhaimah" },
+          image: {
+            src: "/booking/ras-al-khaimah.jpg",
+            altKey: "bookingStep1.rasAlKhaimah",
+          },
         },
         {
           key: "bookingStep1.ajman",
           value: "AJMAN",
           type: "IMAGE",
-          image: { src: FAKE_IMAGE_SRC, altKey: "bookingStep1.ajman" },
+          image: {
+            src: "/booking/ajman.jpg",
+            altKey: "bookingStep1.ajman",
+          },
         },
         {
           key: "bookingStep1.ummAlQuwain",
           value: "UMM_AL_QUWAIN",
           type: "IMAGE",
-          image: { src: FAKE_IMAGE_SRC, altKey: "bookingStep1.ummAlQuwain" },
+          image: {
+            src: "/booking/umm-al-quwain.jpg",
+            altKey: "bookingStep1.ummAlQuwain",
+          },
         },
         {
           key: "bookingStep1.fujairah",
           value: "FUJAIRAH",
           type: "IMAGE",
-          image: { src: FAKE_IMAGE_SRC, altKey: "bookingStep1.fujairah" },
+          image: {
+            src: "/booking/fujairah.jpg",
+            altKey: "bookingStep1.fujairah",
+          },
         },
         {
           key: "bookingStep1.dibbaFujairah",
           value: "DIBBA_FUJAIRAH",
           type: "IMAGE",
-          image: { src: FAKE_IMAGE_SRC, altKey: "bookingStep1.dibbaFujairah" },
+          image: {
+            src: "/booking/dibba-fujairah.jpg",
+            altKey: "bookingStep1.dibbaFujairah",
+          },
         },
       ],
     },
@@ -90,31 +115,46 @@ export const BOOKING = {
           key: "bookingStep2.privateVilla",
           value: "PRIVATE_VILLA",
           type: "IMAGE",
-          image: { src: FAKE_IMAGE_SRC, altKey: "bookingStep2.privateVilla" },
+          image: {
+            src: "/booking/private-villa.jpg",
+            altKey: "bookingStep2.privateVilla",
+          },
         },
         {
           key: "bookingStep2.palace",
           value: "PALACE",
           type: "IMAGE",
-          image: { src: FAKE_IMAGE_SRC, altKey: "bookingStep2.palace" },
+          image: {
+            src: "/booking/palace.jpg",
+            altKey: "bookingStep2.palace",
+          },
         },
         {
           key: "bookingStep2.townhouse",
           value: "TOWNHOUSE",
           type: "IMAGE",
-          image: { src: FAKE_IMAGE_SRC, altKey: "bookingStep2.townhouse" },
+          image: {
+            src: "/booking/townhouse.jpg",
+            altKey: "bookingStep2.townhouse",
+          },
         },
         {
           key: "bookingStep2.apartment",
           value: "APARTMENT",
           type: "IMAGE",
-          image: { src: FAKE_IMAGE_SRC, altKey: "bookingStep2.apartment" },
+          image: {
+            src: "/booking/apartment.jpg",
+            altKey: "bookingStep2.apartment",
+          },
         },
         {
           key: "bookingStep2.commercial",
           value: "COMMERCIAL",
           type: "IMAGE",
-          image: { src: FAKE_IMAGE_SRC, altKey: "bookingStep2.commercial" },
+          image: {
+            src: "/booking/commercial.jpg",
+            altKey: "bookingStep2.commercial",
+          },
         },
       ],
     },
@@ -128,37 +168,55 @@ export const BOOKING = {
           key: "bookingStep3.onPlan",
           value: "ON_PLAN",
           type: "IMAGE",
-          image: { src: FAKE_IMAGE_SRC, altKey: "bookingStep3.onPlan" },
+          image: {
+            src: "/booking/on-plan.jpg",
+            altKey: "bookingStep3.onPlan",
+          },
         },
         {
           key: "bookingStep3.excavation",
           value: "EXCAVATION",
           type: "IMAGE",
-          image: { src: FAKE_IMAGE_SRC, altKey: "bookingStep3.excavation" },
+          image: {
+            src: "/booking/excavation.jpg",
+            altKey: "bookingStep3.excavation",
+          },
         },
         {
           key: "bookingStep3.columns",
           value: "COLUMNS_AND_BRICKWORK",
           type: "IMAGE",
-          image: { src: FAKE_IMAGE_SRC, altKey: "bookingStep3.columns" },
+          image: {
+            src: "/booking/columns-and-brickwork.jpg",
+            altKey: "bookingStep3.columns",
+          },
         },
         {
           key: "bookingStep3.plastering",
           value: "PLASTERING_AND_EXTENSIONS",
           type: "IMAGE",
-          image: { src: FAKE_IMAGE_SRC, altKey: "bookingStep3.plastering" },
+          image: {
+            src: "/booking/plastering-and-extensions.jpg",
+            altKey: "bookingStep3.plastering",
+          },
         },
         {
           key: "bookingStep3.finishing",
           value: "FINISHING",
           type: "IMAGE",
-          image: { src: FAKE_IMAGE_SRC, altKey: "bookingStep3.finishing" },
+          image: {
+            src: "/booking/finishing.jpg",
+            altKey: "bookingStep3.finishing",
+          },
         },
         {
           key: "bookingStep3.renovation",
           value: "RENOVATION",
           type: "IMAGE",
-          image: { src: FAKE_IMAGE_SRC, altKey: "bookingStep3.renovation" },
+          image: {
+            src: "/booking/renovation.jpg",
+            altKey: "bookingStep3.renovation",
+          },
         },
       ],
     },
@@ -172,14 +230,17 @@ export const BOOKING = {
           key: "bookingStep4.no",
           value: "NO",
           type: "IMAGE",
-          image: { src: FAKE_IMAGE_SRC, altKey: "bookingStep4.no" },
+          image: {
+            src: "/booking/previous-work-no.jpg",
+            altKey: "bookingStep4.no",
+          },
         },
         {
           key: "bookingStep4.startedNotFinalized",
           value: "STARTED_NOT_FINALIZED",
           type: "IMAGE",
           image: {
-            src: FAKE_IMAGE_SRC,
+            src: "/booking/started-not-finalized.jpg",
             altKey: "bookingStep4.startedNotFinalized",
           },
         },
@@ -188,7 +249,7 @@ export const BOOKING = {
           value: "STARTED_WITH_OTHER",
           type: "IMAGE",
           image: {
-            src: FAKE_IMAGE_SRC,
+            src: "/booking/started-with-other.jpg",
             altKey: "bookingStep4.startedWithOther",
           },
         },
@@ -204,19 +265,28 @@ export const BOOKING = {
           key: "bookingStep5.yes",
           value: "YES",
           type: "IMAGE",
-          image: { src: FAKE_IMAGE_SRC, altKey: "bookingStep5.yes" },
+          image: {
+            src: "/booking/architectural-plan-yes.jpg",
+            altKey: "bookingStep5.yes",
+          },
         },
         {
           key: "bookingStep5.no",
           value: "NO",
           type: "IMAGE",
-          image: { src: FAKE_IMAGE_SRC, altKey: "bookingStep5.no" },
+          image: {
+            src: "/booking/architectural-plan-no.jpg",
+            altKey: "bookingStep5.no",
+          },
         },
         {
           key: "bookingStep5.yesWithNotes",
           value: "YES_WITH_NOTES",
           type: "IMAGE",
-          image: { src: FAKE_IMAGE_SRC, altKey: "bookingStep5.yesWithNotes" },
+          image: {
+            src: "/booking/architectural-plan-yes-with-notes.jpg",
+            altKey: "bookingStep5.yesWithNotes",
+          },
         },
       ],
     },
@@ -230,20 +300,26 @@ export const BOOKING = {
           key: "bookingStep6.designOnly",
           value: "DESIGN_ONLY",
           type: "IMAGE",
-          image: { src: FAKE_IMAGE_SRC, altKey: "bookingStep6.designOnly" },
+          image: {
+            src: "/booking/design-only.jpg",
+            altKey: "bookingStep6.designOnly",
+          },
         },
         {
           key: "bookingStep6.designAndPlans",
           value: "DESIGN_AND_PLANS",
           type: "IMAGE",
-          image: { src: FAKE_IMAGE_SRC, altKey: "bookingStep6.designAndPlans" },
+          image: {
+            src: "/booking/design-and-plans.jpg",
+            altKey: "bookingStep6.designAndPlans",
+          },
         },
         {
           key: "bookingStep6.designAndExecution",
           value: "DESIGN_AND_EXECUTION_AND_QUALITY_SUPERVISION",
           type: "IMAGE",
           image: {
-            src: FAKE_IMAGE_SRC,
+            src: "/booking/design-and-execution.jpg",
             altKey: "bookingStep6.designAndExecution",
           },
         },
@@ -259,19 +335,28 @@ export const BOOKING = {
           key: "bookingStep7.me",
           value: "ME",
           type: "IMAGE",
-          image: { src: FAKE_IMAGE_SRC, altKey: "bookingStep7.me" },
+          image: {
+            src: "/booking/decision-maker-me.jpg",
+            altKey: "bookingStep7.me",
+          },
         },
         {
           key: "bookingStep7.meAndPartner",
           value: "ME_AND_PARTNER",
           type: "IMAGE",
-          image: { src: FAKE_IMAGE_SRC, altKey: "bookingStep7.meAndPartner" },
+          image: {
+            src: "/booking/decision-maker-me-and-partner.jpg",
+            altKey: "bookingStep7.meAndPartner",
+          },
         },
         {
           key: "bookingStep7.notMe",
           value: "NOT_ME",
           type: "IMAGE",
-          image: { src: FAKE_IMAGE_SRC, altKey: "bookingStep7.notMe" },
+          image: {
+            src: "/booking/decision-maker-not-me.jpg",
+            altKey: "bookingStep7.notMe",
+          },
         },
       ],
     },

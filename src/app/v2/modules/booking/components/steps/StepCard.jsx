@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { Box, Typography } from "@mui/material";
 import { BsCheckCircleFill } from "react-icons/bs";
 import { useLanguageContext } from "@/app/v2/providers/LanguageProvider";
@@ -36,17 +37,20 @@ export function StepCard({ step, onSelect, isActive, isDisabled = false }) {
     >
       {/* Image */}
       <Box
-        component="img"
-        src={step.image?.src}
-        alt={translate(step.image?.altKey)}
         sx={{
           position: "absolute",
           inset: 0,
-          width: "100%",
-          height: "100%",
-          objectFit: "cover",
         }}
-      />
+      >
+        <Image
+          src={step.image?.src}
+          alt={translate(step.image?.altKey)}
+          fill
+          quality={70}
+          sizes="(max-width: 600px) 50vw, (max-width: 900px) 33vw, 280px"
+          style={{ objectFit: "cover" }}
+        />
+      </Box>
 
       {/* Gradient overlay */}
       <Box
