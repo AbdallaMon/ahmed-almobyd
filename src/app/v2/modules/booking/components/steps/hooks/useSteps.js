@@ -50,6 +50,7 @@ export function useSteps({ onDone }) {
   const [isHydratingLead, setIsHydratingLead] = useState(false);
   const [submittedLead, setSubmittedLead] = useState(null);
   const [submitMessage, setSubmitMessage] = useState(null);
+  const leadClearedRef = useRef(false);
   const currentStep = BOOKING_STEPS[currentStepIndex];
   const isFirstStep = currentStepIndex === 0;
   const isLastStep = currentStepIndex === BOOKING_STEPS.length - 1;
@@ -92,7 +93,17 @@ export function useSteps({ onDone }) {
 
   useEffect(() => {
     const nextLeadId = searchParams.get("leadId");
+
+    // Once URL no longer has the cleared leadId, reset the flag
+    if (!nextLeadId && leadClearedRef.current) {
+      leadClearedRef.current = false;
+      return;
+    }
+
     if (!nextLeadId || isSubmitted) return;
+
+    // Don't re-set a leadId that was just cleared due to 404
+    if (leadClearedRef.current) return;
 
     if (nextLeadId !== String(leadId || "")) {
       setLeadId(nextLeadId);
@@ -111,7 +122,7 @@ export function useSteps({ onDone }) {
       try {
         const lead = await getLead(leadId);
         if (!mounted) return;
-
+        console.log("Hydrated lead:", lead);
         if (lead?.status === "SUBMITTED") {
           setSubmittedLead(lead);
           setSubmitMessage(null);
@@ -166,6 +177,7 @@ export function useSteps({ onDone }) {
           const isNotFound = /not found|404/i.test(message);
 
           if (isNotFound) {
+            leadClearedRef.current = true;
             setLeadId(null);
             setFormData({});
             setCurrentStepIndex(0);
