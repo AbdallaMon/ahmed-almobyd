@@ -126,7 +126,7 @@ export const bookingSteps = {
     ar: "ارغب من مهندس احمد تواصل معي",
   },
   "bookingStep8.contactInitialPriceAgreement": {
-    en: "Design prices start from 60k AED",
-    ar: "اسعار تصميم داحلي تبدأ من 60 الف درهم",
+    en: "I understand that interior design prices start from 60K AED",
+    ar: "لدي العلم ان اسعار تصميم داحلي تبدأ من 60 الف درهم",
   },
 };

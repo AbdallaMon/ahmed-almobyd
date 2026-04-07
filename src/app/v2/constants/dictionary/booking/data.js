@@ -24,4 +24,16 @@ export const bookingData = {
     en: "Make your dream.",
     ar: "حقق حلمك.",
   },
+  "booking.successMessage": {
+    en: "Thank you for registering. We will contact you soon.",
+    ar: "شكرا لتسجيلك سنتواصل معك قريبا.",
+  },
+  "booking.alreadySubmitted": {
+    en: "You have already submitted a booking request. We will contact you soon.",
+    ar: "لقد قمت بالفعل بتقديم طلب حجز. سنتواصل معك قريبا.",
+  },
+  "booking.alreadySubmittedToday": {
+    en: "You have already submitted a booking request today. Please wait for our contact.",
+    ar: "لقد قمت بالفعل بتقديم طلب حجز اليوم. يرجى الانتظار لتواصلنا معك.",
+  },
 };

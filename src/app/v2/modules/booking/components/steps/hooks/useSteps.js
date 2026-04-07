@@ -177,7 +177,6 @@ export function useSteps({ onDone }) {
           const isNotFound = /not found|404/i.test(message);
 
           if (isNotFound) {
-            leadClearedRef.current = true;
             setLeadId(null);
             setFormData({});
             setCurrentStepIndex(0);
@@ -313,14 +312,11 @@ export function useSteps({ onDone }) {
 
           if (lead?.status === "SUBMITTED") {
             setSubmittedLead(lead);
-            setSubmitMessage(response?.message || null);
+            setSubmitMessage(translate("booking.successMessage"));
             setInfoMessage(null);
           }
 
-          toast.update(
-            toastId,
-            Success(response?.message || translate("status.success")),
-          );
+          toast.update(toastId, Success(translate("booking.successMessage")));
 
           if (onDone) onDone();
           return true;
@@ -329,10 +325,9 @@ export function useSteps({ onDone }) {
           const status = err?.status;
 
           if (status === 409) {
-            setInfoMessage(message);
             if (err?.payload?.lead?.status === "SUBMITTED") {
               setSubmittedLead(err.payload.lead);
-              setSubmitMessage(err.payload?.message || null);
+              setSubmitMessage(translate("booking.successMessage"));
             }
           } else if (status === 400) {
             setError(message);
@@ -342,8 +337,14 @@ export function useSteps({ onDone }) {
           } else {
             setError(message);
           }
-
-          toast.update(toastId, Failed(message));
+          if (message.includes("booking.alreadySubmittedToday")) {
+            toast.update(
+              toastId,
+              Failed(translate("booking.alreadySubmittedToday")),
+            );
+          } else {
+            toast.update(toastId, Failed(message));
+          }
           return false;
         } finally {
           setIsSubmitting(false);
