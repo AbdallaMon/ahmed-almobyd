@@ -275,7 +275,7 @@ export const BOOKING = {
           value: "NO",
           type: "IMAGE",
           image: {
-            src: "/booking/architectural-plan-no.jpg",
+            src: "/booking/architectural-plan-no.png",
             altKey: "bookingStep5.no",
           },
         },
