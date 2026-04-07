@@ -38,7 +38,6 @@ export async function createLead(location) {
 
 export async function getLead(leadId) {
   const res = await request(`${BOOKING_LEADS_BASE}/${leadId}`, "GET");
-  console.log(res, "res");
   if (!res.ok) {
     const err = await res.json().catch(() => ({}));
     throw new ApiError(err.message || "Failed to fetch lead", res.status, err);
