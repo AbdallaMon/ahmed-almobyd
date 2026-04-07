@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback, useEffect } from "react";
+import { useState, useCallback, useEffect, useRef } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { toast } from "react-toastify";
 import { BOOKING_STEPS } from "../../../data";
@@ -28,6 +28,10 @@ export function useSteps({ onDone }) {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const { translate } = useLanguageContext();
+  const translateRef = useRef(translate);
+  useEffect(() => {
+    translateRef.current = translate;
+  });
   const { setLoading } = useToastContext();
 
   const queryStep = Number(searchParams.get("step") || "1");
@@ -111,7 +115,9 @@ export function useSteps({ onDone }) {
         if (lead?.status === "SUBMITTED") {
           setSubmittedLead(lead);
           setSubmitMessage(null);
-          setInfoMessage(translate("status.bookingAlreadySubmitted"));
+          setInfoMessage(
+            translateRef.current("status.bookingAlreadySubmitted"),
+          );
           setError(null);
           setServerFieldErrors({});
           return;
@@ -181,7 +187,7 @@ export function useSteps({ onDone }) {
     return () => {
       mounted = false;
     };
-  }, [leadId, onDone, translate]);
+  }, [leadId, onDone]);
 
   useEffect(() => {
     const params = new URLSearchParams(searchParams.toString());

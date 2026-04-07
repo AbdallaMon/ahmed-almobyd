@@ -13,7 +13,17 @@ export function StepCard({ step, onSelect, isActive, isDisabled = false }) {
     <Box
       className="step-select-card"
       data-value={step.value}
+      role="button"
+      tabIndex={isDisabled ? -1 : 0}
+      aria-pressed={isActive}
+      aria-disabled={isDisabled}
       onClick={() => !isDisabled && onSelect(step.value)}
+      onKeyDown={(e) => {
+        if (!isDisabled && (e.key === "Enter" || e.key === " ")) {
+          e.preventDefault();
+          onSelect(step.value);
+        }
+      }}
       sx={{
         position: "relative",
         width: "100%",
@@ -24,15 +34,23 @@ export function StepCard({ step, onSelect, isActive, isDisabled = false }) {
         border: "2px solid",
         borderColor: isActive ? colors.primary : "transparent",
         boxShadow: isActive
-          ? `0 0 0 3px ${colors.primary}55, 0 4px 16px rgba(0,0,0,0.22)`
+          ? `0 0 0 3px ${colors.primary}55, 0 4px 16px rgba(0,0,0,0.28)`
           : "0px 3px 10px rgba(0,0,0,0.22)",
         transition: "border-color 0.24s, box-shadow 0.24s",
         transformOrigin: "center center",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        p: 2,
-        textAlign: "center",
+        "&:hover .step-card-hover": isDisabled ? {} : { opacity: 1 },
+        "&:focus-visible": {
+          outline: `3px solid ${colors.primary}`,
+          outlineOffset: "2px",
+        },
+        "&:hover": isDisabled
+          ? {}
+          : {
+              borderColor: isActive ? colors.primary : `${colors.primary}80`,
+              boxShadow: isActive
+                ? `0 0 0 3px ${colors.primary}55, 0 6px 20px rgba(0,0,0,0.32)`
+                : `0 0 0 2px ${colors.primary}40, 0 6px 18px rgba(0,0,0,0.28)`,
+            },
       }}
     >
       {/* Image */}
@@ -40,6 +58,7 @@ export function StepCard({ step, onSelect, isActive, isDisabled = false }) {
         sx={{
           position: "absolute",
           inset: 0,
+          bgcolor: "grey.900",
         }}
       >
         <Image
@@ -52,17 +71,30 @@ export function StepCard({ step, onSelect, isActive, isDisabled = false }) {
         />
       </Box>
 
-      {/* Gradient overlay */}
+      {/* Gradient overlay — strong at bottom where label sits */}
       <Box
         sx={{
           position: "absolute",
           inset: 0,
-
           zIndex: 1,
         }}
         style={{
           background:
-            "linear-gradient(to top, rgba(0,0,0,0.65) 0%, rgba(0,0,0,0.40) 55%, transparent 100%)",
+            "linear-gradient(to top, rgba(0,0,0,0.88) 0%, rgba(0,0,0,0.55) 38%, rgba(0,0,0,0.12) 70%, rgba(0,0,0,0) 100%)",
+        }}
+      />
+
+      {/* Hover tint — CSS-only, no GSAP conflict */}
+      <Box
+        className="step-card-hover"
+        sx={{
+          position: "absolute",
+          inset: 0,
+          backgroundColor: "rgba(255,255,255,0.06)",
+          opacity: 0,
+          zIndex: 2,
+          transition: "opacity 0.18s",
+          pointerEvents: "none",
         }}
       />
 
@@ -74,7 +106,7 @@ export function StepCard({ step, onSelect, isActive, isDisabled = false }) {
           inset: 0,
           backgroundColor: colors.primary,
           opacity: 0,
-          zIndex: 2,
+          zIndex: 3,
           pointerEvents: "none",
         }}
       />
@@ -86,25 +118,27 @@ export function StepCard({ step, onSelect, isActive, isDisabled = false }) {
             position: "absolute",
             inset: 0,
             backgroundColor: colors.primary,
-            opacity: 0.15,
+            opacity: 0.12,
             zIndex: 2,
           }}
         />
       )}
 
-      {/* Label */}
+      {/* Label — pinned to the bottom over the dark gradient */}
       <Typography
         variant="body2"
         sx={{
-          // position: "absolute",
-          left: 10,
-          right: 10,
-          zIndex: 3,
-          // color: "#fff",
+          position: "absolute",
+          bottom: 8,
+          left: 8,
+          right: 8,
+          zIndex: 4,
+          color: "#fff",
           fontWeight: 700,
           textAlign: "center",
-          textShadow: "0 1px 4px rgba(0,0,0,0.6)",
-          color: "primary.contrastText",
+          textShadow: "0 1px 4px rgba(0,0,0,0.8)",
+          fontSize: { xs: "0.72rem", sm: "0.8rem" },
+          lineHeight: 1.25,
         }}
       >
         {translate(step.key)}
@@ -117,9 +151,9 @@ export function StepCard({ step, onSelect, isActive, isDisabled = false }) {
             position: "absolute",
             top: 8,
             right: 8,
-            zIndex: 4,
+            zIndex: 5,
             color: colors.primary,
-            filter: "drop-shadow(0 1px 3px rgba(0,0,0,0.5))",
+            filter: "drop-shadow(0 1px 3px rgba(0,0,0,0.6))",
             display: "flex",
           }}
         >

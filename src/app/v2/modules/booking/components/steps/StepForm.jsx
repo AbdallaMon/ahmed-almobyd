@@ -2,6 +2,7 @@
 
 import { useEffect } from "react";
 import {
+  Alert,
   Box,
   Button,
   Checkbox,
@@ -64,7 +65,6 @@ export function StepForm({
         borderRadius: 3,
         p: { xs: 2, md: 3 },
         boxShadow: "0 8px 24px rgba(0,0,0,0.08)",
-        direction: "ltr",
       }}
       className="final-selection-form"
     >
@@ -99,25 +99,32 @@ export function StepForm({
             );
           }
           if (field.inputType === "checkbox") {
+            const isOptional = !field.required;
             return (
-              // render error state by showing helper text below the checkbox
               <Controller
                 key={field.id}
                 name={field.id}
                 control={control}
                 defaultValue={false}
-                rules={{
-                  required: translate(field.errorKey),
-                }}
+                rules={
+                  isOptional ? {} : { required: translate(field.errorKey) }
+                }
                 render={({ field: ctrl }) => (
                   <>
-                    <FormControlLabel
-                      control={<Checkbox {...ctrl} checked={ctrl.value} />}
-                      label={translate(field.key)}
-                      sx={{
-                        mt: "8px !important",
-                      }}
-                    />
+                    {isOptional ? (
+                      <Alert
+                        severity="info"
+                        sx={{ mt: "8px !important", textAlign: "start" }}
+                      >
+                        {translate(field.key)}
+                      </Alert>
+                    ) : (
+                      <FormControlLabel
+                        control={<Checkbox {...ctrl} checked={ctrl.value} />}
+                        label={translate(field.key)}
+                        sx={{ mt: "8px !important" }}
+                      />
+                    )}
                     {errors[field.id] && (
                       <Box
                         sx={{

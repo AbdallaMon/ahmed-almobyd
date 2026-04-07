@@ -1,11 +1,14 @@
 "use client";
 
 import { Box, Button, Container, Typography, useTheme } from "@mui/material";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useLanguageContext } from "@/app/v2/providers/LanguageProvider";
 import { BOOKING_DATA } from "../data";
 
 export default function VideoLandingPage({ showForm = false, setShowForm }) {
   const theme = useTheme();
+  const router = useRouter();
+  const searchParams = useSearchParams();
   const { lng, translate } = useLanguageContext();
   if (showForm) return;
   return (
@@ -56,9 +59,9 @@ export default function VideoLandingPage({ showForm = false, setShowForm }) {
           variant="contained"
           fullWidth
           onClick={() => {
-            const url = new URL(window.location.href);
-            url.searchParams.set("booking", "true");
-            window.history.pushState({}, "", url);
+            const params = new URLSearchParams(searchParams.toString());
+            params.set("booking", "true");
+            router.push(`?${params.toString()}`);
           }}
           sx={{
             height: { xs: 56, sm: 60 },

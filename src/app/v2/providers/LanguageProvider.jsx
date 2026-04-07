@@ -1,6 +1,12 @@
 "use client";
 
-import { createContext, useContext, useEffect, useState } from "react";
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 import { dictionary } from "@/app/v2/constants/dictionary";
 import createCache from "@emotion/cache";
 import { CacheProvider } from "@emotion/react";
@@ -18,9 +24,7 @@ export default function LanguageProvider({
 }) {
   const [lng, setLang] = useState(initialLng);
 
-  function translate(key) {
-    return dictionary[key]?.[lng] ?? key;
-  }
+  const translate = useCallback((key) => dictionary[key]?.[lng] ?? key, [lng]);
 
   function changeLanguage(value) {
     setLang(value);
