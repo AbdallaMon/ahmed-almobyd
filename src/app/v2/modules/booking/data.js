@@ -1,6 +1,5 @@
 export const BOOKING = {
-  landingIframeSrc:
-    "https://www.youtube.com/embed/vhIdEs8GPJ0?si=Wd28HsfMa3VW3UQh",
+  landingIframeSrc: "https://www.youtube.com/embed/zz78H3-Ho7o",
   freeVisit: "booking.getFreeVisit",
   makeDream: "booking.makeDream",
   success: "booking.registeredSuccess",
