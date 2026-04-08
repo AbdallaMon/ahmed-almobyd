@@ -17,9 +17,9 @@ import {
 /**
  * Core multi-step booking logic.
  *
- * Step 1  — awaits `createLead(location)` to get `leadId`, then advances.
- * Steps 2-7 — fires `fireUpdateLead` (no await), advances immediately.
- * Step 8  — awaits `submitFinalLead` with all accumulated `formData`, then calls `onDone`.
+ * Step 1  — awaits `createLead({ name, phone })` to get `leadId`, then advances.
+ * Steps 2-8 — fires `fireUpdateLead` (no await), advances immediately.
+ * Step 9  — awaits `submitFinalLead` with all accumulated `formData`, then calls `onDone`.
  *
  * @param {{ onDone: Function }} options
  */
@@ -56,12 +56,23 @@ export function useSteps({ onDone }) {
   const isLastStep = currentStepIndex === BOOKING_STEPS.length - 1;
   const isSubmitted = submittedLead?.status === "SUBMITTED";
 
+  const isStepCompleted = useCallback((step, data) => {
+    if (step?.type === "FORM") {
+      return (step.fields || []).every((field) => {
+        if (!field.required) return true;
+        const value = data?.[field.id];
+        if (field.inputType === "checkbox") return value === true;
+        return value !== null && value !== undefined && value !== "";
+      });
+    }
+
+    if (!step?.field) return false;
+    const value = data?.[step.field];
+    return value !== null && value !== undefined && value !== "";
+  }, []);
+
   const lastSubmittedStepIndex = Math.min(
-    BOOKING_STEPS.filter((step) => {
-      if (!step.field) return false;
-      const value = formData?.[step.field];
-      return value !== null && value !== undefined && value !== "";
-    }).length,
+    BOOKING_STEPS.filter((step) => isStepCompleted(step, formData)).length,
     BOOKING_STEPS.length - 1,
   );
   const canJumpToLastSubmittedStep =
@@ -74,11 +85,9 @@ export function useSteps({ onDone }) {
       setCurrentStepIndex(0);
     }
 
-    const completedStepCount = BOOKING_STEPS.filter((step) => {
-      if (!step.field) return false;
-      const value = formData?.[step.field];
-      return value !== null && value !== undefined && value !== "";
-    }).length;
+    const completedStepCount = BOOKING_STEPS.filter((step) =>
+      isStepCompleted(step, formData),
+    ).length;
 
     const normalizedIndex = Math.min(
       completedStepCount,
@@ -89,7 +98,7 @@ export function useSteps({ onDone }) {
     if (currentStepIndex > normalizedIndex) {
       setCurrentStepIndex(normalizedIndex);
     }
-  }, [currentStepIndex, formData, isSubmitted, leadId]);
+  }, [currentStepIndex, formData, isStepCompleted, isSubmitted, leadId]);
 
   useEffect(() => {
     const nextLeadId = searchParams.get("leadId");
@@ -159,11 +168,9 @@ export function useSteps({ onDone }) {
 
         setFormData(nextFormData);
 
-        const completedStepCount = BOOKING_STEPS.filter((step) => {
-          if (!step.field) return false;
-          const value = nextFormData[step.field];
-          return value !== null && value !== undefined && value !== "";
-        }).length;
+        const completedStepCount = BOOKING_STEPS.filter((step) =>
+          isStepCompleted(step, nextFormData),
+        ).length;
 
         const nextIndex = Math.min(
           completedStepCount,
@@ -198,7 +205,7 @@ export function useSteps({ onDone }) {
     return () => {
       mounted = false;
     };
-  }, [leadId, onDone]);
+  }, [isStepCompleted, leadId, onDone]);
 
   useEffect(() => {
     const params = new URLSearchParams(searchParams.toString());
@@ -257,7 +264,7 @@ export function useSteps({ onDone }) {
     params.delete("leadId");
     window.history.replaceState(null, "", `${pathname}?${params.toString()}`);
     window.location.reload();
-  }, []);
+  }, [pathname, searchParams]);
 
   const onNext = useCallback(
     async (value) => {
@@ -284,8 +291,8 @@ export function useSteps({ onDone }) {
 
           setLeadId(String(nextLeadId));
 
-          // save step-1 selection; location is already persisted in createLead payload.
-          const updated = { ...formData, [currentStep.field]: value };
+          // Save step-1 form fields (name/phone) in local state.
+          const updated = { ...formData, ...value };
           setFormData(updated);
 
           setCurrentStepIndex((i) => i + 1);
@@ -298,9 +305,8 @@ export function useSteps({ onDone }) {
         }
       }
 
-      // ── Step 8: final form submit — send ALL accumulated data at once ────────
+      // ── Last step: final form submit — send ALL accumulated data at once ─────
       if (isLastStep) {
-        // `value` is the full form object { name, phone, email }
         const allData = { ...formData, ...value };
         setIsSubmitting(true);
         setLoading(true);
@@ -352,7 +358,7 @@ export function useSteps({ onDone }) {
         }
       }
 
-      // ── Steps 2-7: save to state + fire individual update (no await) ────────
+      // ── Steps 2-8: save to state + fire individual update (no await) ────────
       if (!leadId) {
         setCurrentStepIndex(0);
         setError("Missing lead id. Restarted from step 1.");

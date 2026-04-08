@@ -26,6 +26,19 @@ export function StepForm({
 }) {
   const { translate } = useLanguageContext();
   const { defaultCountry } = useGeoCountry("INSIDE_UAE");
+  const getStepDefaultValues = () => {
+    const defaults = {};
+
+    for (const field of step.fields || []) {
+      if (field.inputType === "checkbox") {
+        defaults[field.id] = Boolean(formData?.[field.id]);
+      } else {
+        defaults[field.id] = formData?.[field.id] || "";
+      }
+    }
+
+    return defaults;
+  };
 
   const {
     handleSubmit,
@@ -34,26 +47,12 @@ export function StepForm({
     reset,
     formState: { errors },
   } = useForm({
-    defaultValues: {
-      name: formData?.name || "",
-      phone: formData?.phone || "",
-      email: formData?.email || "",
-      contactAgreement: formData?.contactAgreement || false,
-      contactInitialPriceAgreement:
-        formData?.contactInitialPriceAgreement || false,
-    },
+    defaultValues: getStepDefaultValues(),
   });
 
   useEffect(() => {
-    reset({
-      name: formData?.name || "",
-      phone: formData?.phone || "",
-      email: formData?.email || "",
-      contactAgreement: formData?.contactAgreement || false,
-      contactInitialPriceAgreement:
-        formData?.contactInitialPriceAgreement || false,
-    });
-  }, [formData, reset]);
+    reset(getStepDefaultValues());
+  }, [formData, reset, step.id]);
 
   return (
     <Box

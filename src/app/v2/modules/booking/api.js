@@ -25,10 +25,10 @@ async function request(path, method, body) {
 }
 
 /**
- * Step 1 — creates a lead with the required location field.
+ * Step 1 — creates a lead with initial customer fields.
  */
-export async function createLead(location) {
-  const res = await request(BOOKING_LEADS_BASE, "POST", { location });
+export async function createLead(initialData) {
+  const res = await request(BOOKING_LEADS_BASE, "POST", initialData);
   if (!res.ok) {
     const err = await res.json().catch(() => ({}));
     throw new ApiError(err.message || "Failed to create lead", res.status, err);
@@ -45,14 +45,14 @@ export async function getLead(leadId) {
   return res.json();
 }
 /**
- * Steps 2-7 — fire-and-forget update. Never throws; errors are silently ignored.
+ * Steps 2-8 — fire-and-forget update. Never throws; errors are silently ignored.
  */
 export function fireUpdateLead(leadId, stepData) {
   request(`${BOOKING_LEADS_BASE}/${leadId}`, "PATCH", stepData).catch(() => {});
 }
 
 /**
- * Step 8 — final submit with all accumulated form data. Awaited.
+ * Step 9 — final submit with all accumulated form data. Awaited.
  */
 export async function submitFinalLead(leadId, allData) {
   const res = await request(

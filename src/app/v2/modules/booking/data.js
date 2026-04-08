@@ -9,6 +9,27 @@ export const BOOKING = {
   steps: [
     {
       id: 1,
+      key: "booking.fillDetails",
+      type: "FORM",
+      fields: [
+        {
+          id: "name",
+          key: "bookingStep8.name",
+          inputType: "text",
+          required: true,
+          errorKey: "validation.required",
+        },
+        {
+          id: "phone",
+          key: "bookingStep8.phone",
+          inputType: "tel",
+          required: true,
+          errorKey: "validation.invalidPhone",
+        },
+      ],
+    },
+    {
+      id: 2,
       key: "bookingStep1.title",
       field: "location",
       type: "SELECT",
@@ -106,7 +127,7 @@ export const BOOKING = {
       ],
     },
     {
-      id: 2,
+      id: 3,
       key: "bookingStep2.title",
       field: "projectType",
       type: "SELECT",
@@ -159,7 +180,7 @@ export const BOOKING = {
       ],
     },
     {
-      id: 3,
+      id: 4,
       key: "bookingStep3.title",
       field: "projectStage",
       type: "SELECT",
@@ -221,7 +242,7 @@ export const BOOKING = {
       ],
     },
     {
-      id: 4,
+      id: 5,
       key: "bookingStep4.title",
       field: "previousWork",
       type: "SELECT",
@@ -256,7 +277,7 @@ export const BOOKING = {
       ],
     },
     {
-      id: 5,
+      id: 6,
       key: "bookingStep5.title",
       field: "hasArchitecturalPlan",
       type: "SELECT",
@@ -291,7 +312,7 @@ export const BOOKING = {
       ],
     },
     {
-      id: 6,
+      id: 7,
       key: "bookingStep6.title",
       field: "serviceType",
       type: "SELECT",
@@ -326,7 +347,7 @@ export const BOOKING = {
       ],
     },
     {
-      id: 7,
+      id: 8,
       key: "bookingStep7.title",
       field: "decisionMaker",
       type: "SELECT",
@@ -361,24 +382,10 @@ export const BOOKING = {
       ],
     },
     {
-      id: 8,
+      id: 9,
       key: "bookingStep8.title",
       type: "FORM",
       fields: [
-        {
-          id: "name",
-          key: "bookingStep8.name",
-          inputType: "text",
-          required: true,
-          errorKey: "validation.required",
-        },
-        {
-          id: "phone",
-          key: "bookingStep8.phone",
-          inputType: "tel",
-          required: true,
-          errorKey: "validation.invalidPhone",
-        },
         {
           id: "email",
           key: "bookingStep8.email",
