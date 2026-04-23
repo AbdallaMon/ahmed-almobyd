@@ -118,7 +118,6 @@ export function useSteps({ onDone }) {
       setLeadId(nextLeadId);
     }
   }, [isSubmitted, leadId, searchParams]);
-
   useEffect(() => {
     if (!leadId) return;
 
@@ -131,7 +130,6 @@ export function useSteps({ onDone }) {
       try {
         const lead = await getLead(leadId);
         if (!mounted) return;
-        console.log("Hydrated lead:", lead);
         if (lead?.status === "SUBMITTED") {
           setSubmittedLead(lead);
           setSubmitMessage(null);
@@ -179,8 +177,28 @@ export function useSteps({ onDone }) {
         setCurrentStepIndex(nextIndex);
         setSubmittedLead(null);
       } catch (err) {
+        if (err?.message === "Booking lead not found") {
+          setLeadId(null);
+          setFormData({});
+          setCurrentStepIndex(0);
+          setSubmittedLead(null);
+          setError(translate("booking.progressNotFound"));
+          const params = new URLSearchParams(searchParams.toString());
+          params.delete("leadId");
+          params.delete("step");
+          window.history.replaceState(
+            null,
+            "",
+            `${pathname}?${params.toString()}`,
+          );
+          leadClearedRef.current = true;
+          window.setTimeout(() => {
+            window.location.reload();
+          }, 1000);
+          return;
+        }
         if (mounted) {
-          const message = err?.message || "Failed to restore booking lead";
+          const message = err?.message;
           const isNotFound = /not found|404/i.test(message);
 
           if (isNotFound) {
@@ -188,7 +206,20 @@ export function useSteps({ onDone }) {
             setFormData({});
             setCurrentStepIndex(0);
             setSubmittedLead(null);
-            setError("Saved lead not found. Started a new booking.");
+            setError(translate("booking.progressNotFound"));
+
+            const params = new URLSearchParams(searchParams.toString());
+            params.delete("leadId");
+            params.delete("step");
+            window.history.replaceState(
+              null,
+              "",
+              `${pathname}?${params.toString()}`,
+            );
+            leadClearedRef.current = true;
+            window.setTimeout(() => {
+              window.location.reload();
+            }, 1000);
           } else {
             setError(message);
           }
@@ -328,6 +359,27 @@ export function useSteps({ onDone }) {
           return true;
         } catch (err) {
           const message = err?.message || "Failed to submit";
+          if (message === "Booking lead not found") {
+            setLeadId(null);
+            setFormData({});
+            setCurrentStepIndex(0);
+            setSubmittedLead(null);
+            setError(translate("booking.progressNotFound"));
+
+            const params = new URLSearchParams(searchParams.toString());
+            params.delete("leadId");
+            params.delete("step");
+            window.history.replaceState(
+              null,
+              "",
+              `${pathname}?${params.toString()}`,
+            );
+            leadClearedRef.current = true;
+            window.setTimeout(() => {
+              window.location.reload();
+            }, 1000);
+            return false;
+          }
           const status = err?.status;
 
           if (status === 409) {

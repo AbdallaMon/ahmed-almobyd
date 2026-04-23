@@ -73,7 +73,7 @@ export default function VideoLandingPage({ showForm = false, setShowForm }) {
             textTransform: "none",
           }}
         >
-          {translate(BOOKING_DATA.freeVisit)}
+          {translate(BOOKING_DATA.bookButton)}
         </Button>
         <Typography
           variant="h6"

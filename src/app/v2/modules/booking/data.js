@@ -1,6 +1,6 @@
 export const BOOKING = {
-  landingIframeSrc: "https://www.youtube.com/embed/zz78H3-Ho7o",
-  freeVisit: "booking.getFreeVisit",
+  landingIframeSrc: "https://www.youtube.com/embed/4sDkaJthLC0?",
+  bookButton: "booking.bookButton",
   makeDream: "booking.makeDream",
   success: "booking.registeredSuccess",
   waitForVisit: "booking.waitForVisit",
@@ -415,7 +415,7 @@ export const BOOKING = {
 // Backward compatibility for existing consumers
 export const BOOKING_DATA = {
   landingIframeSrc: BOOKING.landingIframeSrc,
-  freeVisit: BOOKING.freeVisit,
+  bookButton: BOOKING.bookButton,
   makeDream: BOOKING.makeDream,
   success: BOOKING.success,
   waitForVisit: BOOKING.waitForVisit,

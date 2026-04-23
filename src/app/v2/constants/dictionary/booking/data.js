@@ -8,6 +8,10 @@ export const bookingData = {
     en: "Get Your Free Visit",
     ar: "احصل علي زيارتك المجانية",
   },
+  "booking.bookButton": {
+    en: "Enter your information to get your gift.",
+    ar: "سجل معلوماتك لتحصل على هديتك",
+  },
   "booking.registeredSuccess": {
     en: "Registered Successfully",
     ar: "تم التسجيل بنجاح",
@@ -35,5 +39,9 @@ export const bookingData = {
   "booking.alreadySubmittedToday": {
     en: "You have already submitted a booking request today. Please wait for our contact.",
     ar: "لقد قمت بالفعل بتقديم طلب حجز اليوم. يرجى الانتظار لتواصلنا معك.",
+  },
+  "booking.progressNotFound": {
+    en: "Saved booking progress not found. Redirecting you to start a new booking.",
+    ar: "لم يتم العثور على تقدم الحجز المحفوظ. سيتم اعادة توجيهك لبدء حجز جديد.",
   },
 };
